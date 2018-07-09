@@ -12,8 +12,8 @@ class Verify_validate < MoceanFactory
         return self
     end
     
-    def setOtpCode param
-        @params['mocean-otp-code'] = param
+    def setCode param
+        @params['mocean-code'] = param
         return self
     end
     

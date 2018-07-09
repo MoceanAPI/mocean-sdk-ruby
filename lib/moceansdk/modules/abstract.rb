@@ -75,7 +75,7 @@ end
 class Transmitter
    
     def initialize uri,method,params
-        @URL = 'rest-api.moceansms.com'
+        @URL = 'rest.moceanapi.com'
         @uri = uri 
         @params = params
         
