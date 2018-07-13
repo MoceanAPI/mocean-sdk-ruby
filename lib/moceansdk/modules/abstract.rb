@@ -78,6 +78,7 @@ class Transmitter
         @URL = 'rest.moceanapi.com'
         @uri = uri 
         @params = params
+        @params['mocean-medium'] = 'RUBY-SDK'
         
         begin
             @http = Net::HTTP.new(@URL,443)  
