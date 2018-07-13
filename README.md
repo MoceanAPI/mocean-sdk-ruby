@@ -1,5 +1,6 @@
 MoceanAPI Client Library for Ruby 
 ============================
+[![Gem Version](https://badge.fury.io/rb/moceansdk.svg)](https://badge.fury.io/rb/moceansdk) 
 
 This is the Ruby client library for use Mocean's API. To use this, you'll need a Mocean account. Sign up [for free at 
 moceanapi.com][signup].
