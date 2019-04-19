@@ -49,4 +49,9 @@ class Mocean
         require_relative "modules/message/verify_validate"
         return Verify_validate.new(@obj_auth)
     end
+
+    def number_lookup
+        require_relative "modules/number_lookup/number_lookup"
+        NumberLookup.new(@obj_auth)
+    end
 end
