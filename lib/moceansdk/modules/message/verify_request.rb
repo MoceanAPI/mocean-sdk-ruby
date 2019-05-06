@@ -5,6 +5,7 @@ class Verify_request < MoceanFactory
     def __init__ client
         super(client)
         @required_fields = ['mocean-api-key','mocean-api-secret','mocean-to','mocean-brand']
+        @charge_type = ChargeType.CHARGE_PER_CONVERSION
     end
     
     def setTo param
@@ -47,11 +48,20 @@ class Verify_request < MoceanFactory
         super(params)
         return self
     end
-    
-    def send 
+
+    def sendAs chargeType
+        @charge_type = chargeType
+        return self
+    end
+
+    def send
         createFinalParams
         isRequiredFieldsSet
-        response = Transmitter.new('/rest/1/verify/req','post',@params)
+        @verify_request_url = '/rest/1/verify/req'
+        if @charge_type === ChargeType.CHARGE_PER_ATTEMPT
+            @verify_request_url += '/sms'
+        end
+        response = Transmitter.new(@verify_request_url,'post',@params)
         return response.getResponse()
     end
     
