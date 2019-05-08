@@ -1,11 +1,12 @@
 require_relative "../abstract"
+require_relative 'charge_type'
 
 class Verify_request < MoceanFactory
     
     def __init__ client
         super(client)
         @required_fields = ['mocean-api-key','mocean-api-secret','mocean-to','mocean-brand']
-        @charge_type = ChargeType.CHARGE_PER_CONVERSION
+        @charge_type = ChargeType::CHARGE_PER_CONVERSION
     end
     
     def setTo param
@@ -13,7 +14,7 @@ class Verify_request < MoceanFactory
         return self
     end
     
-    def setBrand
+    def setBrand param
         @params['mocean-brand'] = param
         return self;
     end
@@ -58,7 +59,7 @@ class Verify_request < MoceanFactory
         createFinalParams
         isRequiredFieldsSet
         @verify_request_url = '/rest/1/verify/req'
-        if @charge_type === ChargeType.CHARGE_PER_ATTEMPT
+        if @charge_type === ChargeType::CHARGE_PER_ATTEMPT
             @verify_request_url += '/sms'
         end
         response = Transmitter.new(@verify_request_url,'post',@params)
