@@ -88,7 +88,7 @@ module Moceansdk
 
 
           # v2 test
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price_V2.xml'))
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price_v2.xml'))
           fake = Minitest::Mock.new
           transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '2')
 
