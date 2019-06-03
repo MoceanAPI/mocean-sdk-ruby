@@ -44,7 +44,7 @@ module Moceansdk
 
       def format_response(response_text, is_xml = false, uri = nil)
         raw_response = response_text
-        print @options[:version]
+
         # format for v1
         if !uri.nil? && @options[:version] == '1' && is_xml
           if uri == '/account/pricing'
