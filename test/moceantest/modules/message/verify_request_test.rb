@@ -63,6 +63,48 @@ module Moceansdk
           assert fake.verify
         end
 
+        def test_send_as_sms_channel
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/req/sms'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            verify_request = client.verify_request
+            assert_equal verify_request.channel, Channel::AUTO
+            verify_request.send_as Channel::SMS
+            assert_equal verify_request.channel, Channel::SMS
+            assert_equal(verify_request.send(
+                'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+            ), 'testing only')
+          end
+
+          assert fake.verify
+        end
+
+        def test_resend
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/resend/sms'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            assert_equal(client.verify_request.resend(
+                'mocean-reqid': 'test reqid'
+            ), 'testing only')
+          end
+
+          assert fake.verify
+        end
+
         def test_json_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('send_code.json'))
           fake = Minitest::Mock.new

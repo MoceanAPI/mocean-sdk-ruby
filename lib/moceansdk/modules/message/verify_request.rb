@@ -3,10 +3,13 @@ module Moceansdk
     module Message
 
       class VerifyRequest < Moceansdk::Modules::AbstractClient
+        attr_reader :channel, :is_resend
+
         def initialize(obj_auth, transmitter)
           super(obj_auth, transmitter)
           @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to', 'mocean-brand']
-          @charge_type = ChargeType::CHARGE_PER_CONVERSION
+          @channel = Channel::AUTO
+          @is_resend = false
         end
 
         def to=(param)
@@ -41,8 +44,8 @@ module Moceansdk
           @params['mocean-resp-format'] = param
         end
 
-        def send_as(charge_type)
-          @charge_type = charge_type
+        def send_as(channel)
+          @channel = channel
           self
         end
 
@@ -51,12 +54,26 @@ module Moceansdk
           create_final_params
           required_field_set?
 
-          @verify_request_url = '/verify/req'
-          if @charge_type == ChargeType::CHARGE_PER_ATTEMPT
-            @verify_request_url += '/sms'
+          verify_request_url = '/verify'
+          verify_request_url += if @is_resend
+                                  '/resend'
+                                else
+                                  '/req'
+                                end
+
+          if @channel == Channel::SMS
+            verify_request_url += '/sms'
           end
 
-          @transmitter.post(@verify_request_url, @params)
+          @transmitter.post(verify_request_url, @params)
+        end
+
+        def resend(params = {})
+          send_as Channel::SMS
+          @is_resend = true
+          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-reqid']
+
+          send(params)
         end
       end
 

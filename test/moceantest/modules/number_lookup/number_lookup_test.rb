@@ -1,7 +1,7 @@
 require_relative '../../mocean_testing'
 module Moceansdk
   module Modules
-    module Account
+    module NumberLookup
 
       class NumberLookupTest < MoceanTest::Test
         def setup

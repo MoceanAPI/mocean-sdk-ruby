@@ -15,7 +15,7 @@ require 'moceansdk/modules/transmitter'
 require 'moceansdk/modules/account/balance'
 require 'moceansdk/modules/account/pricing'
 
-require 'moceansdk/modules/message/charge_type'
+require 'moceansdk/modules/message/channel'
 require 'moceansdk/modules/message/message_status'
 require 'moceansdk/modules/message/sms'
 require 'moceansdk/modules/message/verify_request'
