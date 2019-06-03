@@ -40,9 +40,9 @@ module Moceansdk
         def test_json_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message_status.json'))
           fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content), [String, String, Hash]
-
           transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
           transmitter_mock.stub(:request, lambda {|method, uri, params|
             assert_equal method, 'get'
             assert_equal uri, '/report/message'
@@ -61,9 +61,9 @@ module Moceansdk
         def test_xml_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message_status.xml'))
           fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/report/message'), [String, String, Hash]
-
           transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content, true, '/report/message'), [String, String, Hash]
           transmitter_mock.stub(:request, lambda {|method, uri, params|
             assert_equal method, 'get'
             assert_equal uri, '/report/message'

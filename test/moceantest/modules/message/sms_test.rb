@@ -86,9 +86,9 @@ module Moceansdk
         def test_json_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message.json'))
           fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content), [String, String, Hash]
-
           transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
           transmitter_mock.stub(:request, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/sms'
@@ -109,9 +109,32 @@ module Moceansdk
         def test_xml_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message.xml'))
           fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/sms'), [String, String, Hash]
+          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '1')
 
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          fake.expect :call, transmitter_mock.format_response(file_content, true, '/sms'), [String, String, Hash]
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/sms'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            res = client.sms.send(
+                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+            )
+
+            assert_equal res.to_s, file_content
+            object_test(res)
+          end
+
+          assert fake.verify
+
+
+          # v2 test
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message_v2.xml'))
+          fake = Minitest::Mock.new
+          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '2')
+
+          fake.expect :call, transmitter_mock.format_response(file_content, true, '/sms'), [String, String, Hash]
           transmitter_mock.stub(:request, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/sms'
