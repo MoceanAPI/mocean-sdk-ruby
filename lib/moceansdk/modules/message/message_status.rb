@@ -1,25 +1,30 @@
-require_relative "../abstract"
+module Moceansdk
+  module Modules
+    module Message
 
-class Message_status < MoceanFactory
-    def initialize client
-        super(client)
-        @required_fields = ['mocean-api-key','mocean-api-secret','mocean-msgid']
+      class MessageStatus < Moceansdk::Modules::AbstractClient
+        def initialize(obj_auth, transmitter)
+          super(obj_auth, transmitter)
+          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-msgid']
+        end
+
+        def msgid=(param)
+          @params['mocean-msgid'] = param
+        end
+
+        def resp_format=(param)
+          @params['mocean-resp-format'] = param
+        end
+
+        def inquiry(params = {})
+          create(params)
+          create_final_params
+          required_field_set?
+
+          @transmitter.get('/report/message', @params)
+        end
+      end
+
     end
-    
-    def setMsgid param
-        @params['mocean-msgid'] = param
-    end
-    
-    def setRespFormat param
-        @params['mocean-resp-format'] = param
-    end
-    
-    def inquiry params
-        create(params)
-        createFinalParams
-        isRequiredFieldsSet
-        response = Transmitter.new('/rest/1/report/message','get',@params)
-        reset
-        return response.getResponse()
-    end
+  end
 end

@@ -1,22 +1,26 @@
-require_relative "../abstract"
+module Moceansdk
+  module Modules
+    module Account
 
-class Balance < MoceanFactory
-    def initialize client
-        super(client)
-        @required_fields = ['mocean-api-key','mocean-api-secret']
+      class Balance < Moceansdk::Modules::AbstractClient
+        def initialize(obj_auth, transmitter)
+          super(obj_auth, transmitter)
+          @required_fields = ['mocean-api-key', 'mocean-api-secret']
+        end
+
+        def resp_format=(param)
+          @params['mocean-resp-format'] = param
+        end
+
+        def inquiry(params = {})
+          create(params)
+          create_final_params
+          required_field_set?
+
+          @transmitter.get('/account/balance', @params)
+        end
+      end
+
     end
-    
-    def setRespFormat param
-        @params['mocean-resp-format'] = param
-        return self
-    end
-    
-    def inquiry params = {}
-        create(params)
-        createFinalParams
-        isRequiredFieldsSet
-        response = Transmitter.new('/rest/1/account/balance','get', @params)
-        reset
-        return response.getResponse()
-    end
+  end
 end

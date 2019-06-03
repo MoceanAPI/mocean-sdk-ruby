@@ -1,38 +1,38 @@
-require_relative "../abstract"
+module Moceansdk
+  module Modules
+    module Account
 
-class Pricing < MoceanFactory
-    
-    def initialize client
-        super(client)
-        required_fields = ['mocean-api-key','mocean-api-secret']
+      class Pricing < Moceansdk::Modules::AbstractClient
+        def initialize(obj_auth, transmitter)
+          super(obj_auth, transmitter)
+          @required_fields = ['mocean-api-key', 'mocean-api-secret']
+        end
+
+        def mcc=(param)
+          @params['mocean-mcc'] = param
+        end
+
+        def mnc=(param)
+          @params['mocean-mnc'] = param
+        end
+
+        def delimiter=(param)
+          @params['mocean-delimiter'] = param
+        end
+
+        def resp_format=(param)
+          @params['mocean-resp-format'] = param
+        end
+
+        def inquiry(params = {})
+          create(params)
+          create_final_params
+          required_field_set?
+
+          @transmitter.get('/account/pricing', @params)
+        end
+      end
+
     end
-    
-    def setMcc param
-        @params['mocean-mcc'] = param
-        return self
-    end
-    
-    def setMnc param
-        @params['mocean-mnc'] = param
-        return self
-    end
-    
-    def setDelimiter param
-        @params['mocean-delimiter'] = param
-        return self
-    end
-    
-    def setRespFormat param
-        @params['mocean-resp-format'] = param
-        return self
-    end
-    
-    def inquiry params = {}
-        create(params)
-        createFinalParams
-        isRequiredFieldsSet
-        response = Transmitter.new('/rest/1/account/pricing','get',@params)
-        reset
-        return response.getResponse()
-    end
+  end
 end
