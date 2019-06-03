@@ -11,10 +11,10 @@ Gem::Specification.new do |s|
   s.description = 'Mocean SDK for Ruby'
   s.summary = 'This is a Mocean SDK written in Ruby, to use it you will need a mocean account. Signup for free at https://moceanapi.com'
   s.files = Dir.glob('lib/**/*.rb') + %w(LICENSE.txt README.md moceansdk.gemspec)
-  s.required_ruby_version = '>= 2.1.0'
+  s.required_ruby_version = '>= 2.2.0'
   s.add_dependency('xml-simple', '~> 1.1')
   s.add_dependency('hash_dot', '~> 2.4')
-  s.add_dependency('http', '~> 4.0')
+  s.add_dependency('http', '~> 3.0')
   s.add_development_dependency('minitest', '~> 5.0')
   s.add_development_dependency('rake', '~> 12.0')
   s.require_path = 'lib'
