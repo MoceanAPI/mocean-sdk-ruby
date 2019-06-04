@@ -1,3 +1,11 @@
+require 'simplecov'
+require 'codecov'
+
+SimpleCov.start do
+  add_filter 'test/moceantest'
+end
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
+
 require 'moceansdk'
 require 'minitest/autorun'
 
