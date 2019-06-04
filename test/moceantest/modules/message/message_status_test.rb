@@ -12,11 +12,11 @@ module Moceansdk
           message_status = @client.message_status
 
           message_status.msgid = 'test msgid'
-          assert message_status.params['mocean-msgid'] != nil
+          refute message_status.params['mocean-msgid'].nil?
           assert_equal 'test msgid', message_status.params['mocean-msgid']
 
           message_status.resp_format = 'json'
-          assert message_status.params['mocean-resp-format'] != nil
+          refute message_status.params['mocean-resp-format'].nil?
           assert_equal 'json', message_status.params['mocean-resp-format']
         end
 

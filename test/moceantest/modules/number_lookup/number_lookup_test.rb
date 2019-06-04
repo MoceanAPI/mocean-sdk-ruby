@@ -12,15 +12,15 @@ module Moceansdk
           number_lookup = @client.number_lookup
 
           number_lookup.to = 'test to'
-          assert number_lookup.params['mocean-to'] != nil
+          refute number_lookup.params['mocean-to'].nil?
           assert_equal 'test to', number_lookup.params['mocean-to']
 
           number_lookup.nl_url = 'test nl url'
-          assert number_lookup.params['mocean-nl-url'] != nil
+          refute number_lookup.params['mocean-nl-url'].nil?
           assert_equal 'test nl url', number_lookup.params['mocean-nl-url']
 
           number_lookup.resp_format = 'json'
-          assert number_lookup.params['mocean-resp-format'] != nil
+          refute number_lookup.params['mocean-resp-format'].nil?
           assert_equal 'json', number_lookup.params['mocean-resp-format']
         end
 

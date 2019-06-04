@@ -12,19 +12,19 @@ module Moceansdk
           pricing = @client.pricing
 
           pricing.mcc = 'test mcc'
-          assert pricing.params['mocean-mcc'] != nil
+          refute pricing.params['mocean-mcc'].nil?
           assert_equal 'test mcc', pricing.params['mocean-mcc']
 
           pricing.mnc = 'test mnc'
-          assert pricing.params['mocean-mnc'] != nil
+          refute pricing.params['mocean-mnc'].nil?
           assert_equal 'test mnc', pricing.params['mocean-mnc']
 
           pricing.delimiter = 'test delimiter'
-          assert pricing.params['mocean-delimiter'] != nil
+          refute pricing.params['mocean-delimiter'].nil?
           assert_equal 'test delimiter', pricing.params['mocean-delimiter']
 
           pricing.resp_format = 'json'
-          assert pricing.params['mocean-resp-format'] != nil
+          refute pricing.params['mocean-resp-format'].nil?
           assert_equal 'json', pricing.params['mocean-resp-format']
         end
 

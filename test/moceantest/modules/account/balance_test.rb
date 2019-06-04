@@ -11,7 +11,7 @@ module Moceansdk
         def test_setter
           balance = @client.balance
           balance.resp_format = 'json'
-          assert balance.params['mocean-resp-format'] != nil
+          refute balance.params['mocean-resp-format'].nil?
           assert_equal 'json', balance.params['mocean-resp-format']
         end
 

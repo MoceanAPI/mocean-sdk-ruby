@@ -12,35 +12,35 @@ module Moceansdk
           verify_request = @client.verify_request
 
           verify_request.to = 'test to'
-          assert verify_request.params['mocean-to'] != nil
+          refute verify_request.params['mocean-to'].nil?
           assert_equal 'test to', verify_request.params['mocean-to']
 
           verify_request.brand = 'test brand'
-          assert verify_request.params['mocean-brand'] != nil
+          refute verify_request.params['mocean-brand'].nil?
           assert_equal 'test brand', verify_request.params['mocean-brand']
 
           verify_request.from = 'test from'
-          assert verify_request.params['mocean-from'] != nil
+          refute verify_request.params['mocean-from'].nil?
           assert_equal 'test from', verify_request.params['mocean-from']
 
           verify_request.code_length = 'test code length'
-          assert verify_request.params['mocean-code-length'] != nil
+          refute verify_request.params['mocean-code-length'].nil?
           assert_equal 'test code length', verify_request.params['mocean-code-length']
 
           verify_request.template = 'test template'
-          assert verify_request.params['mocean-template'] != nil
+          refute verify_request.params['mocean-template'].nil?
           assert_equal 'test template', verify_request.params['mocean-template']
 
           verify_request.pin_validity = 'test pin validity'
-          assert verify_request.params['mocean-pin-validity'] != nil
+          refute verify_request.params['mocean-pin-validity'].nil?
           assert_equal 'test pin validity', verify_request.params['mocean-pin-validity']
 
           verify_request.next_event_wait = 'test next event wait'
-          assert verify_request.params['mocean-next-event-wait'] != nil
+          refute verify_request.params['mocean-next-event-wait'].nil?
           assert_equal 'test next event wait', verify_request.params['mocean-next-event-wait']
 
           verify_request.resp_format = 'json'
-          assert verify_request.params['mocean-resp-format'] != nil
+          refute verify_request.params['mocean-resp-format'].nil?
           assert_equal 'json', verify_request.params['mocean-resp-format']
         end
 

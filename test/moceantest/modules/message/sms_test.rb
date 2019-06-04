@@ -12,55 +12,55 @@ module Moceansdk
           sms = @client.sms
 
           sms.from = 'test from'
-          assert sms.params['mocean-from'] != nil
+          refute sms.params['mocean-from'].nil?
           assert_equal 'test from', sms.params['mocean-from']
 
           sms.to = 'test to'
-          assert sms.params['mocean-to'] != nil
+          refute sms.params['mocean-to'].nil?
           assert_equal 'test to', sms.params['mocean-to']
 
           sms.text = 'test text'
-          assert sms.params['mocean-text'] != nil
+          refute sms.params['mocean-text'].nil?
           assert_equal 'test text', sms.params['mocean-text']
 
           sms.udh = 'test udh'
-          assert sms.params['mocean-udh'] != nil
+          refute sms.params['mocean-udh'].nil?
           assert_equal 'test udh', sms.params['mocean-udh']
 
           sms.coding = 'test coding'
-          assert sms.params['mocean-coding'] != nil
+          refute sms.params['mocean-coding'].nil?
           assert_equal 'test coding', sms.params['mocean-coding']
 
           sms.dlr_mask = 'test dlr mask'
-          assert sms.params['mocean-dlr-mask'] != nil
+          refute sms.params['mocean-dlr-mask'].nil?
           assert_equal 'test dlr mask', sms.params['mocean-dlr-mask']
 
           sms.dlr_url = 'test dlr url'
-          assert sms.params['mocean-dlr-url'] != nil
+          refute sms.params['mocean-dlr-url'].nil?
           assert_equal 'test dlr url', sms.params['mocean-dlr-url']
 
           sms.schedule = '2019-02-01'
-          assert sms.params['mocean-schedule'] != nil
+          refute sms.params['mocean-schedule'].nil?
           assert_equal '2019-02-01', sms.params['mocean-schedule']
 
           sms.mclass = 'test mclass'
-          assert sms.params['mocean-mclass'] != nil
+          refute sms.params['mocean-mclass'].nil?
           assert_equal 'test mclass', sms.params['mocean-mclass']
 
           sms.alt_dcs = 'test alt dcs'
-          assert sms.params['mocean-alt-dcs'] != nil
+          refute sms.params['mocean-alt-dcs'].nil?
           assert_equal 'test alt dcs', sms.params['mocean-alt-dcs']
 
           sms.charset = 'test charset'
-          assert sms.params['mocean-charset'] != nil
+          refute sms.params['mocean-charset'].nil?
           assert_equal 'test charset', sms.params['mocean-charset']
 
           sms.validity = 'test validity'
-          assert sms.params['mocean-validity'] != nil
+          refute sms.params['mocean-validity'].nil?
           assert_equal 'test validity', sms.params['mocean-validity']
 
           sms.resp_format = 'json'
-          assert sms.params['mocean-resp-format'] != nil
+          refute sms.params['mocean-resp-format'].nil?
           assert_equal 'json', sms.params['mocean-resp-format']
         end
 
