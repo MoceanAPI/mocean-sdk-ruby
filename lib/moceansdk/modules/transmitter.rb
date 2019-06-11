@@ -13,7 +13,7 @@ module Moceansdk
       def default_options
         {
             base_url: 'https://rest.moceanapi.com',
-            version: '1'
+            version: '2'
         }
       end
 

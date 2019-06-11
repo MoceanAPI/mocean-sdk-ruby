@@ -25,7 +25,7 @@ module Moceansdk
           create_final_params
           required_field_set?
 
-          @transmitter.get('/nl', @params)
+          @transmitter.post('/nl', @params)
         end
       end
 

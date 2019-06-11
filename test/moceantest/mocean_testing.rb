@@ -1,10 +1,12 @@
-require 'simplecov'
-require 'codecov'
+if ENV['CI'] == 'true'
+  require 'simplecov'
+  require 'codecov'
 
-SimpleCov.start do
-  add_filter 'test/moceantest'
+  SimpleCov.start do
+    add_filter 'test/moceantest'
+  end
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
-SimpleCov.formatter = SimpleCov::Formatter::Codecov
 
 require 'moceansdk'
 require 'minitest/autorun'
