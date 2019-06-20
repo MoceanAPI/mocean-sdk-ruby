@@ -16,7 +16,7 @@ module Moceansdk
       def create_final_params
         final_params = {}
         @params.each do |key, value|
-          unless value.nil? || (value.class != Integer && value.empty?)
+          unless value.nil?
             param_prefix_set?(key) ? final_params[key] = value : final_params["mocean-#{key}"] = value
           end
         end
