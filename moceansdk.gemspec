@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '~> 12.0')
   s.require_path = 'lib'
   s.metadata = {
-      homepage: 'https://github.com/MoceanAPI/mocean-sdk-ruby',
-      source_code_uri: 'https://github.com/MoceanAPI/mocean-sdk-ruby'
+      'homepage': 'https://github.com/MoceanAPI/mocean-sdk-ruby',
+      'source_code_uri': 'https://github.com/MoceanAPI/mocean-sdk-ruby'
   }
 end
