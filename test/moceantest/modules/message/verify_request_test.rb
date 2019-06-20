@@ -44,7 +44,7 @@ module Moceansdk
           assert_equal 'json', verify_request.params['mocean-resp-format']
         end
 
-        def test_inquiry
+        def test_send
           fake = Minitest::Mock.new
           fake.expect :call, 'testing only', [String, String, Hash]
 
@@ -55,6 +55,11 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+
+            assert_raises Moceansdk::Exceptions::RequiredFieldException do
+              client.verify_request.send
+            end
+
             assert_equal(client.verify_request.send(
                 'mocean-to': 'test to', 'mocean-brand': 'test-brand'
             ), 'testing only')
@@ -154,6 +159,7 @@ module Moceansdk
         private
 
         def object_test(verify_request_response)
+          assert_equal verify_request_response.to_hash, verify_request_response.inspect
           assert_equal verify_request_response.status, '0'
           assert_equal verify_request_response.reqid, 'CPASS_restapi_C0000002737000000.0002'
         end

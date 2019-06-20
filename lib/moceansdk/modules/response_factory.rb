@@ -25,7 +25,7 @@ module Moceansdk
           begin
             res = XmlSimple.xml_in(raw_response, 'ForceArray': false)
           rescue StandardError
-            raise Moceansdk::Exceptions::MoceanError('unable to parse response, ' + raw_response)
+            raise Moceansdk::Exceptions::MoceanError, 'unable to parse response, ' + raw_response
           end
         end
 

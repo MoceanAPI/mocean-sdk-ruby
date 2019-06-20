@@ -26,6 +26,26 @@ module Moceansdk
     def test_able_to_construct_obj
       Client.new(Auth::Basic.new('test api key', 'test api secret'))
     end
+
+    def test_create_client_with_unsupported_auth
+      assert_raises Exceptions::MoceanError do
+        Client.new('test')
+      end
+
+      assert_raises Exceptions::MoceanError do
+        Client.new(DummyCredential.new)
+      end
+    end
+  end
+
+  class DummyCredential < Auth::AbstractAuth
+    def auth_method
+      'dummy'
+    end
+
+    def params
+      super
+    end
   end
 
 end

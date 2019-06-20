@@ -67,7 +67,8 @@ module Moceansdk
         )
 
         if processed_response['status'] && processed_response['status'] != '0' && processed_response['status'] != 0
-          raise Moceansdk::Exceptions::MoceanError, processed_response['err_msg']
+          processed_response.raw_response = raw_response
+          raise Moceansdk::Exceptions::MoceanError.new(processed_response['err_msg'], processed_response)
         end
 
         # format for v1

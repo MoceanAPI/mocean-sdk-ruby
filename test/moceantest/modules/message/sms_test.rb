@@ -75,7 +75,33 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+
+            assert_raises Moceansdk::Exceptions::RequiredFieldException do
+              client.sms.send
+            end
+
             assert_equal(client.sms.send(
+                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+            ), 'testing only')
+          end
+
+          assert fake.verify
+        end
+
+        def test_send_flash_sms
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/sms'
+            refute params[:'mocean-mclass'].nil?
+            refute params[:'mocean-alt-dcs'].nil?
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            assert_equal(client.flash_sms.send(
                 'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
             ), 'testing only')
           end
@@ -155,6 +181,7 @@ module Moceansdk
         private
 
         def object_test(sms_response)
+          assert_equal sms_response.to_hash, sms_response.inspect
           assert_equal sms_response.messages[0].status, '0'
           assert_equal sms_response.messages[0].receiver, '60123456789'
           assert_equal sms_response.messages[0].msgid, 'CPASS_restapi_C0000002737000000.0001'

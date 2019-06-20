@@ -111,6 +111,7 @@ module Moceansdk
         private
 
         def object_test(pricing_response)
+          assert_equal pricing_response.to_hash, pricing_response.inspect
           assert_equal pricing_response.status, '0'
           assert_equal pricing_response.destinations.length, 25
           assert_equal pricing_response.destinations[0].country, 'Default'

@@ -31,6 +31,11 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+
+            assert_raises Moceansdk::Exceptions::RequiredFieldException do
+              client.message_status.inquiry
+            end
+
             assert_equal client.message_status.inquiry('mocean-msgid': 'test msgid'), 'testing only'
           end
 
@@ -82,6 +87,7 @@ module Moceansdk
         private
 
         def object_test(message_status_response)
+          assert_equal message_status_response.to_hash, message_status_response.inspect
           assert_equal message_status_response.status, '0'
           assert_equal message_status_response.message_status, '5'
           assert_equal message_status_response.msgid, 'CPASS_restapi_C0000002737000000.0001'

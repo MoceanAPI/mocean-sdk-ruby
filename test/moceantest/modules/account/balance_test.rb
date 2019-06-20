@@ -77,6 +77,7 @@ module Moceansdk
         private
 
         def object_test(balance_response)
+          assert_equal balance_response.to_hash, balance_response.inspect
           assert_equal balance_response.status, '0'
           assert_equal balance_response.value, '100.0000'
         end

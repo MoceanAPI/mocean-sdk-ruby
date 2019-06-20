@@ -35,6 +35,11 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+
+            assert_raises Moceansdk::Exceptions::RequiredFieldException do
+              client.number_lookup.inquiry
+            end
+
             assert_equal client.number_lookup.inquiry('mocean-to' => 'test to'), 'testing only'
           end
 
@@ -86,6 +91,7 @@ module Moceansdk
         private
 
         def object_test(number_lookup_response)
+          assert_equal number_lookup_response.to_hash, number_lookup_response.inspect
           assert_equal number_lookup_response.status, '0'
           assert_equal number_lookup_response.msgid, 'CPASS_restapi_C00000000000000.0002'
           assert_equal number_lookup_response.to, '60123456789'
