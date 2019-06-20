@@ -1,15 +1,19 @@
 module Moceansdk
   module Modules
-    module Message
+    module NumberLookup
 
-      class MessageStatus < Moceansdk::Modules::AbstractClient
+      class NumberLookup < Moceansdk::Modules::AbstractClient
         def initialize(obj_auth, transmitter)
           super(obj_auth, transmitter)
-          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-msgid']
+          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-to']
         end
 
-        def msgid=(param)
-          @params['mocean-msgid'] = param
+        def to=(param)
+          @params['mocean-to'] = param
+        end
+
+        def nl_url=(param)
+          @params['mocean-nl-url'] = param
         end
 
         def resp_format=(param)
@@ -21,7 +25,7 @@ module Moceansdk
           create_final_params
           required_field_set?
 
-          @transmitter.get('/report/message', @params)
+          @transmitter.post('/nl', @params)
         end
       end
 
