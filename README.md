@@ -3,7 +3,7 @@ MoceanAPI Client Library for Ruby
 [![Gem Version](https://img.shields.io/gem/v/moceansdk.svg)](https://rubygems.org/gems/moceansdk) 
 [![build status](https://img.shields.io/travis/com/MoceanAPI/mocean-sdk-ruby.svg)](https://travis-ci.com/MoceanAPI/mocean-sdk-ruby)
 [![codecov](https://img.shields.io/codecov/c/github/MoceanAPI/mocean-sdk-ruby.svg)](https://codecov.io/gh/MoceanAPI/mocean-sdk-ruby)
-[![codacy](https://img.shields.io/codacy/grade/5d5f7f9e7b1c4e888636a244283bf6f7.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-ruby/dashboard)
+[![codacy](https://img.shields.io/codacy/grade/7564ecfa8e7948a7ba15cb7634258c7e.svg)](https://app.codacy.com/project/MoceanAPI/mocean-sdk-ruby/dashboard)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 [![total downloads](https://img.shields.io/gem/dt/moceansdk.svg)](https://rubygems.org/gems/moceansdk)
 
