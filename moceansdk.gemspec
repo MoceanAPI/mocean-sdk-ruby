@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('lib/**/*.rb') + %w(LICENSE.txt README.md moceansdk.gemspec)
   s.required_ruby_version = '>= 2.2.0'
   s.add_dependency('hash_dot', '~> 2.4')
-  s.add_dependency('http', '~> 3.0')
+  s.add_dependency('http', '>= 3', '< 5')
   s.add_dependency('xml-simple', '~> 1.1')
   s.add_development_dependency('codecov', '>= 0.1.10')
   s.add_development_dependency('minitest', '~> 5.0')
