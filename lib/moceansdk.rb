@@ -23,6 +23,16 @@ require 'moceansdk/modules/message/verify_validate'
 
 require 'moceansdk/modules/number_lookup/number_lookup'
 
+require 'moceansdk/modules/voice/mccc_object/abstract_mccc'
+require 'moceansdk/modules/voice/mccc_object/bridge'
+require 'moceansdk/modules/voice/mccc_object/collect'
+require 'moceansdk/modules/voice/mccc_object/play'
+require 'moceansdk/modules/voice/mccc_object/say'
+require 'moceansdk/modules/voice/mccc_object/sleep'
+require 'moceansdk/modules/voice/mccc'
+require 'moceansdk/modules/voice/mccc_builder'
+require 'moceansdk/modules/voice/voice'
+
 require 'moceansdk/utils'
 require 'moceansdk/version'
 require 'moceansdk/client'

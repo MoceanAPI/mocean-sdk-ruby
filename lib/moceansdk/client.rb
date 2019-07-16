@@ -57,6 +57,10 @@ module Moceansdk
     def number_lookup
       Modules::NumberLookup::NumberLookup.new(@obj_auth, @transmitter)
     end
+
+    def voice
+      Modules::Voice::Voice.new(@obj_auth, @transmitter)
+    end
   end
 
 end
