@@ -13,7 +13,7 @@ module Moceansdk
           def get_request_data
             required_key.each do |key|
               if @params["#{key}"].nil?
-                raise Moceansdk::Exceptions::RequiredFieldException, "#{key} is mandatory field, can't leave empty (#{self.to_s})"
+                raise Moceansdk::Exceptions::RequiredFieldException, "#{key} is mandatory field, can't leave empty (#{self})"
               end
             end
 

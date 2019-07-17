@@ -26,6 +26,24 @@ module Moceansdk
           voice.resp_format = 'json'
           refute voice.params['mocean-resp-format'].nil?
           assert_equal 'json', voice.params['mocean-resp-format']
+
+          # test multiple call control commands
+          voice = @client.voice
+          voice.call_control_commands = [{'action': 'say'}]
+          refute voice.params['mocean-call-control-commands'].nil?
+          assert_equal JSON.generate([{'action': 'say'}]), voice.params['mocean-call-control-commands']
+
+          voice = @client.voice
+          builder_params = McccBuilder.new.add(Mccc.say 'hello world')
+          voice.call_control_commands = builder_params
+          refute voice.params['mocean-call-control-commands'].nil?
+          assert_equal JSON.generate(builder_params.build), voice.params['mocean-call-control-commands']
+
+          voice = @client.voice
+          mccc_params = Mccc.say('hello world')
+          voice.call_control_commands = mccc_params
+          refute voice.params['mocean-call-control-commands'].nil?
+          assert_equal JSON.generate(McccBuilder.new.add(mccc_params).build), voice.params['mocean-call-control-commands']
         end
 
         def test_call
@@ -44,7 +62,7 @@ module Moceansdk
               client.voice.call
             end
 
-            assert_equal client.voice.call('mocean-to' => 'test to'), 'testing only'
+            assert_equal client.voice.call('mocean-to' => 'test to', 'mocean-call-control-commands' => 'test call control commands'), 'testing only'
           end
 
           assert fake.verify
