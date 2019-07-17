@@ -33,13 +33,15 @@ module Moceansdk
         end
 
         def call(params = {})
-          unless params[:'mocean-call-control-commands'].nil?
-            mccc = params[:'mocean-call-control-commands']
-            params.delete(:'mocean-call-control-commands')
+          sym_params = Moceansdk::Utils.convert_to_symbol_hash(params)
+
+          unless sym_params[:'mocean-call-control-commands'].nil?
+            mccc = sym_params[:'mocean-call-control-commands']
+            sym_params.delete(:'mocean-call-control-commands')
             self.call_control_commands = mccc
           end
 
-          create(params)
+          create(sym_params)
           create_final_params
           required_field_set?
 

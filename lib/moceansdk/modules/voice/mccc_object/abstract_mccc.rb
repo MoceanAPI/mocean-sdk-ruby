@@ -11,13 +11,15 @@ module Moceansdk
           end
 
           def get_request_data
+            @params = Moceansdk::Utils.convert_to_symbol_hash(@params);
+
             required_key.each do |key|
-              if @params["#{key}"].nil?
+              if @params[:"#{key}"].nil?
                 raise Moceansdk::Exceptions::RequiredFieldException, "#{key} is mandatory field, can't leave empty (#{self})"
               end
             end
 
-            @params['action'] = action
+            @params[:action] = action
             @params
           end
 
