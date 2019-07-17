@@ -7,21 +7,21 @@ module Moceansdk
           def initialize(params = nil)
             super(params)
 
-            if @params['language'].nil?
-              @params['language'] = 'en-US'
+            if @params[:language].nil?
+              @params[:language] = 'en-US'
             end
           end
 
           def language=(param)
-            @params['language'] = param
+            @params[:language] = param
           end
 
           def text=(param)
-            @params['text'] = param
+            @params[:text] = param
           end
 
           def barge_in=(param)
-            @params['barge-in'] = param
+            @params[:'barge-in'] = param
           end
 
           def required_key

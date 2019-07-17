@@ -40,7 +40,7 @@ module Moceansdk
               client.number_lookup.inquiry
             end
 
-            assert_equal client.number_lookup.inquiry('mocean-to' => 'test to'), 'testing only'
+            assert_equal client.number_lookup.inquiry('mocean-to': 'test to'), 'testing only'
           end
 
           assert fake.verify
@@ -58,7 +58,7 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry('mocean-to' => 'test to')
+            res = client.number_lookup.inquiry('mocean-to': 'test to')
 
             assert_equal res.to_s, file_content
             object_test(res)
@@ -79,7 +79,7 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry('mocean-to' => 'test to')
+            res = client.number_lookup.inquiry('mocean-to': 'test to')
 
             assert_equal res.to_s, file_content
             object_test(res)

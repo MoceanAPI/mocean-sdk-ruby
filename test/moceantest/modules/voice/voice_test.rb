@@ -62,7 +62,7 @@ module Moceansdk
               client.voice.call
             end
 
-            assert_equal client.voice.call('mocean-to' => 'test to', 'mocean-call-control-commands' => 'test call control commands'), 'testing only'
+            assert_equal client.voice.call('mocean-to': 'test to', 'mocean-call-control-commands': 'test call control commands'), 'testing only'
           end
 
           assert fake.verify
@@ -80,7 +80,7 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.call('mocean-to' => 'test to')
+            res = client.voice.call('mocean-to': 'test to')
 
             assert_equal res.to_s, file_content
             object_test(res)
@@ -101,7 +101,7 @@ module Moceansdk
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.call('mocean-to' => 'test to')
+            res = client.voice.call('mocean-to': 'test to')
 
             assert_equal res.to_s, file_content
             object_test(res)

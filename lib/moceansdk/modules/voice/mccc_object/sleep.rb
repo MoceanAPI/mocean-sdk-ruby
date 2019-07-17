@@ -9,11 +9,11 @@ module Moceansdk
           end
 
           def duration=(param)
-            @params['duration'] = param
+            @params[:duration] = param
           end
 
           def barge_in=(param)
-            @params['barge-in'] = param
+            @params[:'barge-in'] = param
           end
 
           def required_key

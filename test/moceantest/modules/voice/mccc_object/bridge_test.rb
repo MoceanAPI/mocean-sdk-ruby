@@ -7,8 +7,8 @@ module Moceansdk
         class BridgeTest < MoceanTest::Test
           def test_params
             params = {
-                'to' => 'testing to',
-                'action' => 'dial'
+                'to': 'testing to',
+                'action': 'dial'
             }
             assert_equal params, Bridge.new(params).get_request_data
 
@@ -20,9 +20,9 @@ module Moceansdk
 
           def test_if_action_auto_defined
             params = {
-                'to' => 'testing to'
+                'to': 'testing to'
             }
-            assert_equal 'dial', Bridge.new(params).get_request_data['action']
+            assert_equal 'dial', Bridge.new(params).get_request_data[:action]
           end
 
           def test_if_required_field_not_set

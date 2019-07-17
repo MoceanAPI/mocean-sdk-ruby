@@ -7,9 +7,9 @@ module Moceansdk
         class SleepTest < MoceanTest::Test
           def test_params
             params = {
-                'duration' => 10000,
-                'barge-in' => true,
-                'action' => 'sleep'
+                'duration': 10000,
+                'barge-in': true,
+                'action': 'sleep'
             }
             assert_equal params, Sleep.new(params).get_request_data
 
@@ -22,10 +22,10 @@ module Moceansdk
 
           def test_if_action_auto_defined
             params = {
-                'duration' => 10000,
-                'barge-in' => true
+                'duration': 10000,
+                'barge-in': true
             }
-            assert_equal 'sleep', Sleep.new(params).get_request_data['action']
+            assert_equal 'sleep', Sleep.new(params).get_request_data[:action]
           end
 
           def test_if_required_field_not_set

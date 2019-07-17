@@ -9,11 +9,11 @@ module Moceansdk
           end
 
           def files=(param)
-            @params['file'] = param
+            @params[:file] = param
           end
 
           def barge_in=(param)
-            @params['barge-in'] = param
+            @params[:'barge-in'] = param
           end
 
           def required_key

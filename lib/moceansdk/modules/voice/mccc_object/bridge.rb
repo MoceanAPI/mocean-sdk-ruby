@@ -9,7 +9,7 @@ module Moceansdk
           end
 
           def to=(param)
-            @params['to'] = param
+            @params[:to] = param
           end
 
           def required_key

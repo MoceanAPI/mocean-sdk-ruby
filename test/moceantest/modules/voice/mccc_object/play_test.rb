@@ -7,9 +7,9 @@ module Moceansdk
         class PlayTest < MoceanTest::Test
           def test_params
             params = {
-                'file' => 'testing file',
-                'barge-in' => true,
-                'action' => 'play'
+                'file': 'testing file',
+                'barge-in': true,
+                'action': 'play'
             }
             assert_equal params, Play.new(params).get_request_data
 
@@ -22,10 +22,10 @@ module Moceansdk
 
           def test_if_action_auto_defined
             params = {
-                'file' => 'testing file',
-                'barge-in' => true
+                'file': 'testing file',
+                'barge-in': true
             }
-            assert_equal 'play', Play.new(params).get_request_data['action']
+            assert_equal 'play', Play.new(params).get_request_data[:action]
           end
 
           def test_if_required_field_not_set

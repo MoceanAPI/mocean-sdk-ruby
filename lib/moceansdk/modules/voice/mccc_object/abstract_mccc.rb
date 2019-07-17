@@ -7,11 +7,11 @@ module Moceansdk
           def initialize(params = nil)
             @params = {}
 
-            @params = params unless params.nil?
+            @params = Moceansdk::Utils.convert_to_symbol_hash(params) unless params.nil?
           end
 
           def get_request_data
-            @params = Moceansdk::Utils.convert_to_symbol_hash(@params);
+            @params = Moceansdk::Utils.convert_to_symbol_hash(@params)
 
             required_key.each do |key|
               if @params[:"#{key}"].nil?
