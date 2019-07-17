@@ -6,7 +6,9 @@ module Moceansdk
     end
 
     def self.convert_to_symbol_hash(str_hash)
-      str_hash.inject({}) {|memo, (k, v)| memo[k.to_sym] = v; memo}
+      str_hash.each_with_object({}) do |(k, v), memo|
+        memo[k.to_sym] = v
+      end
     end
   end
 
