@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class SmsTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          sms = @client.sms
+          sms = MoceanTest::TestingUtils.client_obj.sms
 
           sms.from = 'test from'
           refute sms.params['mocean-from'].nil?
@@ -64,118 +60,90 @@ module Moceansdk
           assert_equal 'json', sms.params['mocean-resp-format']
         end
 
-        def test_send
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/sms'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-
-            assert_raises Moceansdk::Exceptions::RequiredFieldException do
-              client.sms.send
-            end
-
-            assert_equal(client.sms.send(
-                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
-            ), 'testing only')
-          end
-
-          assert fake.verify
-        end
-
         def test_send_flash_sms
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/sms'
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message.json',
+              '/sms'
+          ) do |method, uri, params|
+            assert_equal method, :post
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/sms')
             refute params[:'mocean-mclass'].nil?
             refute params[:'mocean-alt-dcs'].nil?
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            assert_equal(client.flash_sms.send(
-                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
-            ), 'testing only')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.json')
+          object_test(res)
         end
 
-        def test_json_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/sms'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.sms.send(
-                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
-            )
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_json_send
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message.json',
+              '/sms'
+          ) do |method, uri|
+            assert_equal method, :post
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/sms')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.json')
+          object_test(res)
         end
 
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '1')
-
-          fake.expect :call, transmitter_mock.format_response(file_content, true, '/sms'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/sms'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.sms.send(
-                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
-            )
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_send
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message.xml',
+              '/sms',
+              '1'
+          ) do |method, uri|
+            assert_equal method, :post
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/sms', '1')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj(Moceansdk::Modules::Transmitter.new({version: '1'}))
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text', 'mocean-resp-format': 'xml'
+          )
 
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.xml')
+          object_test(res)
 
           # v2 test
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message_v2.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '2')
-
-          fake.expect :call, transmitter_mock.format_response(file_content, true, '/sms'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/sms'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.sms.send(
-                'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
-            )
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message_v2.xml',
+              '/sms'
+          ) do |method, uri|
+            assert_equal method, :post
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/sms')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text', 'mocean-resp-format': 'xml'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message_v2.xml')
+          object_test(res)
+        end
+
+        def test_required_field_not_set
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message.json',
+              '/sms'
+          )
+
+          client = MoceanTest::TestingUtils.client_obj
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            client.sms.send
+          end
         end
 
         private
