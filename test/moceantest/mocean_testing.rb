@@ -31,8 +31,8 @@ module MoceanTest
     end
 
     def self.intercept_http_request(file_name, uri, version = '2')
-      WebMock::stub_request(:any, "#{Moceansdk::Modules::Transmitter.new.default_options[:base_url]}/rest/#{version}#{uri}")
-          .with(query: WebMock::hash_including({}))
+      WebMock.stub_request(:any, "#{Moceansdk::Modules::Transmitter.new.default_options[:base_url]}/rest/#{version}#{uri}")
+          .with(query: WebMock.hash_including({}))
           .to_return(body: File.new(resource_file_path(file_name)), status: 200)
 
       WebMock.after_request do |request_signature|
