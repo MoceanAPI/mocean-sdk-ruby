@@ -67,12 +67,12 @@ module Moceansdk
           ) do |method, uri, params|
             assert_equal method, :post
             assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/sms')
-            refute params[:'mocean-mclass'].nil?
-            refute params[:'mocean-alt-dcs'].nil?
+            assert params.key?('mocean-mclass')
+            assert params.key?('mocean-alt-dcs')
           end
 
           client = MoceanTest::TestingUtils.client_obj
-          res = client.sms.send(
+          res = client.flash_sms.send(
               'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
           )
 
