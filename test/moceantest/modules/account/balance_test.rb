@@ -4,74 +4,43 @@ module Moceansdk
     module Account
 
       class BalanceTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          balance = @client.balance
+          balance = MoceanTest::TestingUtils.client_obj.balance
           balance.resp_format = 'json'
           refute balance.params['mocean-resp-format'].nil?
           assert_equal 'json', balance.params['mocean-resp-format']
         end
 
-        def test_inquiry
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/balance'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            assert_equal client.balance.inquiry, 'testing only'
+        def test_json_inquiry
+          MoceanTest::TestingUtils.intercept_http_request(
+              'balance.json',
+              '/account/balance'
+          ) do |method, uri|
+            assert_equal method, :get
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/account/balance')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.balance.inquiry
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('balance.json')
+          object_test(res)
         end
 
-        def test_json_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('balance.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/balance'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.balance.inquiry
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_inquiry
+          MoceanTest::TestingUtils.intercept_http_request(
+              'balance.xml',
+              '/account/balance'
+          ) do |method, uri|
+            assert_equal method, :get
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/account/balance')
           end
 
-          assert fake.verify
-        end
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.balance.inquiry
 
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('balance.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content, true, '/account/balance'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/balance'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.balance.inquiry
-
-            assert_equal res.to_s, file_content
-            object_test(res)
-          end
-
-          assert fake.verify
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('balance.xml')
+          object_test(res)
         end
 
         private

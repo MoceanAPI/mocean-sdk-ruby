@@ -4,12 +4,8 @@ module Moceansdk
     module Account
 
       class PricingTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          pricing = @client.pricing
+          pricing = MoceanTest::TestingUtils.client_obj.pricing
 
           pricing.mcc = 'test mcc'
           refute pricing.params['mocean-mcc'].nil?
@@ -28,84 +24,53 @@ module Moceansdk
           assert_equal 'json', pricing.params['mocean-resp-format']
         end
 
-        def test_inquiry
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/pricing'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            assert_equal client.pricing.inquiry, 'testing only'
+        def test_json_inquiry
+          MoceanTest::TestingUtils.intercept_http_request(
+              'price.json',
+              '/account/pricing'
+          ) do |method, uri|
+            assert_equal method, :get
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/account/pricing')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.pricing.inquiry
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('price.json')
+          object_test(res)
         end
 
-        def test_json_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/pricing'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.pricing.inquiry
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_inquiry
+          MoceanTest::TestingUtils.intercept_http_request(
+              'price.xml',
+              '/account/pricing',
+              '1'
+          ) do |method, uri|
+            assert_equal method, :get
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/account/pricing', '1')
           end
 
-          assert fake.verify
-        end
+          client = MoceanTest::TestingUtils.client_obj(Transmitter.new(version: '1'))
+          res = client.pricing.inquiry('mocean-resp-format': 'xml')
 
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '1')
-
-          fake.expect :call, transmitter_mock.format_response(file_content, true, '/account/pricing'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/pricing'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.pricing.inquiry
-
-            assert_equal res.to_s, file_content
-            object_test(res)
-          end
-
-          assert fake.verify
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('price.xml')
+          object_test(res)
 
 
           # v2 test
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price_v2.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new(version: '2')
-
-          fake.expect :call, transmitter_mock.format_response(file_content, true, '/account/pricing'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/pricing'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.pricing.inquiry
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+          MoceanTest::TestingUtils.intercept_http_request(
+              'price_v2.xml',
+              '/account/pricing'
+          ) do |method, uri|
+            assert_equal method, :get
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/account/pricing')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.pricing.inquiry('mocean-resp-format': 'xml')
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('price_v2.xml')
+          object_test(res)
         end
 
         private
