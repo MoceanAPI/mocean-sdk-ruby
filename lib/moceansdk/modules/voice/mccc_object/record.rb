@@ -3,17 +3,13 @@ module Moceansdk
     module Voice
       module McccObject
 
-        class Sleep < AbstractMccc
-          def duration=(param)
-            @params[:duration] = param
-          end
-
+        class Record < AbstractMccc
           def required_key
-            ['duration']
+            []
           end
 
           def action
-            'sleep'
+            'record'
           end
         end
 

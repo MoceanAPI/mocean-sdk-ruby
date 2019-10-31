@@ -24,6 +24,10 @@ module Moceansdk
             @params[:'barge-in'] = param
           end
 
+          def clear_digit_cache=(param)
+            @params[:'clear-digit-cache'] = param
+          end
+
           def required_key
             ['text', 'language']
           end

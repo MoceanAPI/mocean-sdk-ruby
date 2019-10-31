@@ -52,7 +52,7 @@ module Moceansdk
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
           transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
+            assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
           }) do
@@ -75,7 +75,7 @@ module Moceansdk
 
           fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
           transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
+            assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
           }) do
@@ -96,7 +96,7 @@ module Moceansdk
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
           transmitter_mock.stub(:request, lambda {|method, uri, params|
-            assert_equal method, 'get'
+            assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
           }) do

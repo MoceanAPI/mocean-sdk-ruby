@@ -45,7 +45,7 @@ module Moceansdk
           create_final_params
           required_field_set?
 
-          @transmitter.get('/voice/dial', @params)
+          @transmitter.post('/voice/dial', @params)
         end
       end
 

@@ -9,6 +9,7 @@ module Moceansdk
             params = {
                 'file': 'testing file',
                 'barge-in': true,
+                'clear-digit-cache': true,
                 'action': 'play'
             }
             assert_equal params, Play.new(params).get_request_data
@@ -16,6 +17,7 @@ module Moceansdk
             play = Play.new
             play.files = 'testing file'
             play.barge_in = true
+            play.clear_digit_cache = true
 
             assert_equal params, play.get_request_data
           end

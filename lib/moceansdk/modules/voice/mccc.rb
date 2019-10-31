@@ -23,8 +23,8 @@ module Moceansdk
           ins
         end
 
-        def self.bridge(to = nil)
-          ins = McccObject::Bridge.new
+        def self.dial(to = nil)
+          ins = McccObject::Dial.new
 
           unless to.nil?
             ins.to = to
@@ -51,6 +51,10 @@ module Moceansdk
           end
 
           ins
+        end
+
+        def self.record
+          McccObject::Record.new
         end
       end
 

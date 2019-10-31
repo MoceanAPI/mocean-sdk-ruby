@@ -17,17 +17,17 @@ module Moceansdk
           assert_equal 'testing text2', Mccc.say('testing text2').get_request_data[:text]
         end
 
-        def test_mccc_bridge
-          bridge = Mccc.bridge
+        def test_mccc_dial
+          dial = Mccc.dial
 
           assert_raises Moceansdk::Exceptions::RequiredFieldException do
-            bridge.get_request_data
+            dial.get_request_data
           end
 
-          bridge.to = 'testing to'
-          assert_equal 'testing to', bridge.get_request_data[:to]
+          dial.to = 'testing to'
+          assert_equal 'testing to', dial.get_request_data[:to]
 
-          assert_equal 'testing to2', Mccc.bridge('testing to2').get_request_data[:to]
+          assert_equal 'testing to2', Mccc.dial('testing to2').get_request_data[:to]
         end
 
         def test_mccc_collect
@@ -38,9 +38,16 @@ module Moceansdk
           end
 
           collect.event_url = 'testing event url'
+          collect.minimum = 1
+          collect.maximum = 10
+          collect.timeout = 500
           assert_equal 'testing event url', collect.get_request_data[:'event-url']
 
-          assert_equal 'testing event url2', Mccc.collect('testing event url2').get_request_data[:'event-url']
+          collect = Mccc.collect('testing event url2')
+          collect.minimum = 1
+          collect.maximum = 10
+          collect.timeout = 500
+          assert_equal 'testing event url2',collect.get_request_data[:'event-url']
         end
 
         def test_mccc_play
@@ -67,6 +74,10 @@ module Moceansdk
           assert_equal 10000, sleep.get_request_data[:duration]
 
           assert_equal 20000, Mccc.sleep(20000).get_request_data[:duration]
+        end
+
+        def test_mccc_record
+          assert_equal 'record', Mccc.record.get_request_data[:action]
         end
       end
 

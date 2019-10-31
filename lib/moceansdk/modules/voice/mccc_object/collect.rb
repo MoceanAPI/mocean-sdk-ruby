@@ -4,26 +4,6 @@ module Moceansdk
       module McccObject
 
         class Collect < AbstractMccc
-          def initialize(params = nil)
-            super(params)
-
-            if @params[:min].nil?
-              @params[:min] = 1
-            end
-
-            if @params[:max].nil?
-              @params[:max] = 10
-            end
-
-            if @params[:terminators].nil?
-              @params[:terminators] = '#'
-            end
-
-            if @params[:timeout].nil?
-              @params[:timeout] = 5000
-            end
-          end
-
           def event_url=(param)
             @params[:'event-url'] = param
           end
@@ -45,7 +25,7 @@ module Moceansdk
           end
 
           def required_key
-            ['event-url', 'min', 'max', 'terminators', 'timeout']
+            ['event-url', 'min', 'max', 'timeout']
           end
 
           def action

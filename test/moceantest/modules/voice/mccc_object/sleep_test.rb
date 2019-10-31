@@ -8,22 +8,19 @@ module Moceansdk
           def test_params
             params = {
                 'duration': 10000,
-                'barge-in': true,
                 'action': 'sleep'
             }
             assert_equal params, Sleep.new(params).get_request_data
 
             sleep = Sleep.new
             sleep.duration = 10000
-            sleep.barge_in = true
 
             assert_equal params, sleep.get_request_data
           end
 
           def test_if_action_auto_defined
             params = {
-                'duration': 10000,
-                'barge-in': true
+                'duration': 10000
             }
             assert_equal 'sleep', Sleep.new(params).get_request_data[:action]
           end

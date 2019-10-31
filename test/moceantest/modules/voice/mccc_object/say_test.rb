@@ -10,6 +10,7 @@ module Moceansdk
                 'language': 'testing language',
                 'text': 'testing text',
                 'barge-in': true,
+                'clear-digit-cache': true,
                 'action': 'say'
             }
             assert_equal params, Say.new(params).get_request_data
@@ -18,6 +19,7 @@ module Moceansdk
             say.language = 'testing language'
             say.text = 'testing text'
             say.barge_in = true
+            say.clear_digit_cache = true
 
             assert_equal params, say.get_request_data
           end

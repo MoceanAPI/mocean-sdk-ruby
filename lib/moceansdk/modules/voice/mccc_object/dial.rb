@@ -3,13 +3,17 @@ module Moceansdk
     module Voice
       module McccObject
 
-        class Bridge < AbstractMccc
-          def initialize(params = nil)
-            super(params)
-          end
-
+        class Dial < AbstractMccc
           def to=(param)
             @params[:to] = param
+          end
+
+          def from=(param)
+            @params[:from] = param
+          end
+
+          def dial_sequentially=(param)
+            @params[:'dial-sequentially'] = param
           end
 
           def required_key
