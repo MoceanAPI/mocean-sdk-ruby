@@ -114,9 +114,10 @@ module Moceansdk
 
         def object_test(voice_response)
           assert_equal voice_response.to_hash, voice_response.inspect
-          assert_equal voice_response.status, '0'
-          assert_equal voice_response['session-uuid'], 'xxx-xxx-xxx-xxx'
-          assert_equal voice_response['call-uuid'], 'xxx-xxx-xxx-xxx'
+          assert_equal voice_response.calls[0].status, '0'
+          assert_equal voice_response.calls[0].receiver, '60123456789'
+          assert_equal voice_response.calls[0]['session-uuid'], 'xxx-xxx-xxx-xxx'
+          assert_equal voice_response.calls[0]['call-uuid'], 'xxx-xxx-xxx-xxx'
         end
       end
 

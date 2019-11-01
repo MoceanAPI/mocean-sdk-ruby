@@ -55,6 +55,10 @@ module Moceansdk
             response_text = response_text
                                 .sub('<result>', '<result><messages>')
                                 .sub('</result>', '</messages></result>')
+          elsif uri == '/voice/dial'
+            response_text = response_text
+                                .sub('<result>', '<result><calls>')
+                                .sub('</result>', '</calls></result>')
           end
         end
 
@@ -80,6 +84,11 @@ module Moceansdk
               processed_response.messages.message = [processed_response.messages.message]
             end
             processed_response.messages = processed_response.messages.message
+          elsif uri == '/voice/dial'
+            unless processed_response.calls.call.is_a? Array
+              processed_response.calls.call = [processed_response.calls.call]
+            end
+            processed_response.calls = processed_response.calls.call
           end
         end
 
