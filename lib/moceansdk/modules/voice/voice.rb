@@ -47,6 +47,16 @@ module Moceansdk
 
           @transmitter.post('/voice/dial', @params)
         end
+
+        def hangup(call_uuid)
+          @required_fields = ['mocean-api-key', 'mocean-api-secret']
+
+          create({})
+          create_final_params
+          required_field_set?
+
+          @transmitter.post("/voice/hangup/#{call_uuid}", @params)
+        end
       end
 
     end

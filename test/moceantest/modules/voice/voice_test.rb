@@ -110,6 +110,48 @@ module Moceansdk
           assert fake.verify
         end
 
+        def test_json_hangup
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('hangup.json'))
+          fake = Minitest::Mock.new
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            res = client.voice.hangup('xxx-xxx-xxx-xxx')
+
+            assert_equal res.to_s, file_content
+            assert_equal res.status, '0'
+          end
+
+          assert fake.verify
+        end
+
+        def test_xml_hangup
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('hangup.xml'))
+          fake = Minitest::Mock.new
+          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/voice/hangup/xxx-xxx-xxx-xxx'), [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            res = client.voice.hangup('xxx-xxx-xxx-xxx')
+
+            assert_equal res.to_s, file_content
+            assert_equal res.status, '0'
+          end
+
+          assert fake.verify
+        end
+
         private
 
         def object_test(voice_response)
