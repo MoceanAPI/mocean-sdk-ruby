@@ -55,10 +55,6 @@ module Moceansdk
             response_text = response_text
                                 .sub('<result>', '<result><messages>')
                                 .sub('</result>', '</messages></result>')
-          elsif uri == '/voice/dial'
-            response_text = response_text
-                                .sub('<result>', '<result><calls>')
-                                .sub('</result>', '</calls></result>')
           end
         end
 
