@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class AbstractMccc
+        class AbstractMc
           def initialize(params = nil)
             @params = {}
 
@@ -24,11 +24,11 @@ module Moceansdk
           end
 
           def required_key
-            raise NotImplementedError, 'AbstractMccc is a abstract class'
+            raise NotImplementedError, 'AbstractMc is a abstract class'
           end
 
           def action
-            raise NotImplementedError, 'AbstractMccc is a abstract class'
+            raise NotImplementedError, 'AbstractMc is a abstract class'
           end
         end
 

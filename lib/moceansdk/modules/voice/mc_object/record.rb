@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Record < AbstractMccc
+        class Record < AbstractMc
           def required_key
             []
           end

@@ -2,7 +2,7 @@ require_relative '../../../mocean_testing'
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
         class DialTest < MoceanTest::Test
           def test_params

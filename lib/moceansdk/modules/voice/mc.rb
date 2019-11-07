@@ -2,9 +2,9 @@ module Moceansdk
   module Modules
     module Voice
 
-      class Mccc
+      class Mc
         def self.say(text = nil)
-          ins = McccObject::Say.new
+          ins = McObject::Say.new
 
           unless text.nil?
             ins.text = text
@@ -14,7 +14,7 @@ module Moceansdk
         end
 
         def self.play(file = nil)
-          ins = McccObject::Play.new
+          ins = McObject::Play.new
 
           unless file.nil?
             ins.files = file
@@ -24,7 +24,7 @@ module Moceansdk
         end
 
         def self.dial(to = nil)
-          ins = McccObject::Dial.new
+          ins = McObject::Dial.new
 
           unless to.nil?
             ins.to = to
@@ -34,7 +34,7 @@ module Moceansdk
         end
 
         def self.collect(event_url = nil)
-          ins = McccObject::Collect.new
+          ins = McObject::Collect.new
 
           unless event_url.nil?
             ins.event_url = event_url
@@ -44,7 +44,7 @@ module Moceansdk
         end
 
         def self.sleep(duration = nil)
-          ins = McccObject::Sleep.new
+          ins = McObject::Sleep.new
 
           unless duration.nil?
             ins.duration = duration
@@ -54,7 +54,7 @@ module Moceansdk
         end
 
         def self.record
-          McccObject::Record.new
+          McObject::Record.new
         end
       end
 

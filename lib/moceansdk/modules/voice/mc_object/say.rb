@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Say < AbstractMccc
+        class Say < AbstractMc
           def initialize(params = nil)
             super(params)
 

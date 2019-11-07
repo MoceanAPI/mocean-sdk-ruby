@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Sleep < AbstractMccc
+        class Sleep < AbstractMc
           def duration=(param)
             @params[:duration] = param
           end

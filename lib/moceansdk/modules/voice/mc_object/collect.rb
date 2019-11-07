@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Collect < AbstractMccc
+        class Collect < AbstractMc
           def event_url=(param)
             @params[:'event-url'] = param
           end

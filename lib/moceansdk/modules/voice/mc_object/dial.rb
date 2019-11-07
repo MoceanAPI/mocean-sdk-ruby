@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Dial < AbstractMccc
+        class Dial < AbstractMc
           def to=(param)
             @params[:to] = param
           end

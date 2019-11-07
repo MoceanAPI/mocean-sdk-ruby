@@ -12,19 +12,19 @@ module Moceansdk
           @params['mocean-to'] = param
         end
 
-        def call_event_url=(param)
-          @params['mocean-call-event-url'] = param
+        def event_url=(param)
+          @params['mocean-event-url'] = param
         end
 
-        def call_control_commands=(param)
-          if param.is_a? McccBuilder
-            @params['mocean-call-control-commands'] = JSON.generate(param.build)
-          elsif param.is_a? McccObject::AbstractMccc
-            @params['mocean-call-control-commands'] = JSON.generate([param.get_request_data])
+        def mocean_command=(param)
+          if param.is_a? McBuilder
+            @params['mocean-command'] = JSON.generate(param.build)
+          elsif param.is_a? McObject::AbstractMc
+            @params['mocean-command'] = JSON.generate([param.get_request_data])
           elsif param.is_a? Array
-            @params['mocean-call-control-commands'] = JSON.generate(param)
+            @params['mocean-command'] = JSON.generate(param)
           else
-            @params['mocean-call-control-commands'] = param
+            @params['mocean-command'] = param
           end
         end
 
@@ -35,10 +35,10 @@ module Moceansdk
         def call(params = {})
           sym_params = Moceansdk::Utils.convert_to_symbol_hash(params)
 
-          unless sym_params[:'mocean-call-control-commands'].nil?
-            mccc = sym_params[:'mocean-call-control-commands']
-            sym_params.delete(:'mocean-call-control-commands')
-            self.call_control_commands = mccc
+          unless sym_params[:'mocean-command'].nil?
+            mc = sym_params[:'mocean-command']
+            sym_params.delete(:'mocean-command')
+            self.mocean_command = mc
           end
 
           create(sym_params)

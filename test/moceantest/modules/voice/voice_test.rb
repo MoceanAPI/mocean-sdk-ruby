@@ -15,35 +15,35 @@ module Moceansdk
           refute voice.params['mocean-to'].nil?
           assert_equal 'test to', voice.params['mocean-to']
 
-          voice.call_event_url = 'test call event url'
-          refute voice.params['mocean-call-event-url'].nil?
-          assert_equal 'test call event url', voice.params['mocean-call-event-url']
+          voice.event_url = 'test event url'
+          refute voice.params['mocean-event-url'].nil?
+          assert_equal 'test event url', voice.params['mocean-event-url']
 
-          voice.call_control_commands = 'test call control commands'
-          refute voice.params['mocean-call-control-commands'].nil?
-          assert_equal 'test call control commands', voice.params['mocean-call-control-commands']
+          voice.mocean_command = 'test mocean command'
+          refute voice.params['mocean-command'].nil?
+          assert_equal 'test mocean command', voice.params['mocean-command']
 
           voice.resp_format = 'json'
           refute voice.params['mocean-resp-format'].nil?
           assert_equal 'json', voice.params['mocean-resp-format']
 
-          # test multiple call control commands
+          # test multiple mocean commands
           voice = @client.voice
-          voice.call_control_commands = [{'action': 'say'}]
-          refute voice.params['mocean-call-control-commands'].nil?
-          assert_equal JSON.generate([{'action': 'say'}]), voice.params['mocean-call-control-commands']
+          voice.mocean_command = [{'action': 'say'}]
+          refute voice.params['mocean-command'].nil?
+          assert_equal JSON.generate([{'action': 'say'}]), voice.params['mocean-command']
 
           voice = @client.voice
-          builder_params = McccBuilder.new.add(Mccc.say 'hello world')
-          voice.call_control_commands = builder_params
-          refute voice.params['mocean-call-control-commands'].nil?
-          assert_equal JSON.generate(builder_params.build), voice.params['mocean-call-control-commands']
+          builder_params = McBuilder.new.add(Mc.say 'hello world')
+          voice.mocean_command = builder_params
+          refute voice.params['mocean-command'].nil?
+          assert_equal JSON.generate(builder_params.build), voice.params['mocean-command']
 
           voice = @client.voice
-          mccc_params = Mccc.say('hello world')
-          voice.call_control_commands = mccc_params
-          refute voice.params['mocean-call-control-commands'].nil?
-          assert_equal JSON.generate(McccBuilder.new.add(mccc_params).build), voice.params['mocean-call-control-commands']
+          mc_params = Mc.say('hello world')
+          voice.mocean_command = mc_params
+          refute voice.params['mocean-command'].nil?
+          assert_equal JSON.generate(McBuilder.new.add(mc_params).build), voice.params['mocean-command']
         end
 
         def test_call
@@ -62,7 +62,7 @@ module Moceansdk
               client.voice.call
             end
 
-            assert_equal client.voice.call('mocean-to': 'test to', 'mocean-call-control-commands': 'test call control commands'), 'testing only'
+            assert_equal client.voice.call('mocean-to': 'test to', 'mocean-command': 'test mocean command'), 'testing only'
           end
 
           assert fake.verify

@@ -1,9 +1,9 @@
 module Moceansdk
   module Modules
     module Voice
-      module McccObject
+      module McObject
 
-        class Play < AbstractMccc
+        class Play < AbstractMc
           def files=(param)
             @params[:file] = param
           end

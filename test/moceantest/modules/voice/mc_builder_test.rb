@@ -3,11 +3,11 @@ module Moceansdk
   module Modules
     module Voice
 
-      class McccBuilderTest < MoceanTest::Test
+      class McBuilderTest < MoceanTest::Test
         def test_add
-          play = Mccc.play 'testing file'
+          play = Mc.play 'testing file'
 
-          builder = McccBuilder.new
+          builder = McBuilder.new
           builder.add play
           assert_equal builder.build.count, 1
           assert_equal play.get_request_data, builder.build[0]
@@ -18,9 +18,9 @@ module Moceansdk
           assert_equal play.get_request_data, builder.build[1]
         end
 
-        def test_throw_exception_for_add_method_pass_in_non_mccc_object
+        def test_throw_exception_for_add_method_pass_in_non_mc_object
           assert_raises Moceansdk::Exceptions::MoceanError do
-            McccBuilder.new.add('abc')
+            McBuilder.new.add('abc')
           end
         end
       end
