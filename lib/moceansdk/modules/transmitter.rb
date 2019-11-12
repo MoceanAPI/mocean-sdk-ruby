@@ -13,16 +13,23 @@ module Moceansdk
       def default_options
         {
             base_url: 'https://rest.moceanapi.com',
-            version: '2'
+            version: '2',
+            verify_ssl: true
         }
       end
 
       def get(uri, params)
-        request('get', uri, params)
+        request_and_parse_body('get', uri, params)
       end
 
       def post(uri, params)
-        request('post', uri, params)
+        request_and_parse_body('post', uri, params)
+      end
+
+      def request_and_parse_body(method, uri, params)
+        res = request(method, uri, params)
+
+        format_response(res.to_s, params[:'mocean-resp-format'] == 'xml', uri)
       end
 
       def request(method, uri, params)
@@ -33,13 +40,11 @@ module Moceansdk
 
         url = @options[:base_url] + '/rest/' + @options[:version] + uri
 
-        res = if method.casecmp('get').zero?
-                HTTP.get(url, params: params)
-              else
-                HTTP.post(url, form: params)
-              end
-
-        format_response(res.to_s, params[:'mocean-resp-format'] == 'xml', uri)
+        if method.casecmp('get').zero?
+          HTTP.follow.get(url, params: params, ssl_context: make_ssl_context)
+        else
+          HTTP.post(url, form: params, ssl_context: make_ssl_context)
+        end
       end
 
       def format_response(response_text, is_xml = false, uri = nil)
@@ -90,6 +95,16 @@ module Moceansdk
 
         processed_response.raw_response = raw_response
         processed_response
+      end
+
+      def make_ssl_context
+        if @options[:verify_ssl]
+          return nil
+        end
+
+        ctx = OpenSSL::SSL::SSLContext.new
+        ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        ctx
       end
     end
 

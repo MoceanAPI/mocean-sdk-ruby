@@ -51,7 +51,7 @@ module Moceansdk
           fake.expect :call, 'testing only', [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
@@ -74,7 +74,7 @@ module Moceansdk
           transmitter_mock = Moceansdk::Modules::Transmitter.new
 
           fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
@@ -95,7 +95,7 @@ module Moceansdk
           fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/voice/dial'), [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/voice/dial'
             fake.call(method, uri, params)
@@ -116,7 +116,7 @@ module Moceansdk
           transmitter_mock = Moceansdk::Modules::Transmitter.new
 
           fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
             fake.call(method, uri, params)
@@ -137,7 +137,7 @@ module Moceansdk
           fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/voice/hangup/xxx-xxx-xxx-xxx'), [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
             fake.call(method, uri, params)

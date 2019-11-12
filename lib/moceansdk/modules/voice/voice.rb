@@ -57,6 +57,26 @@ module Moceansdk
 
           @transmitter.post("/voice/hangup/#{call_uuid}", @params)
         end
+
+        def recording(call_uuid)
+          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
+
+          create({:'mocean-call-uuid' => call_uuid})
+          create_final_params
+          required_field_set?
+
+          response = @transmitter.request('get', '/voice/rec', @params)
+
+          if response['Content-Type'] === 'audio/mpeg'
+            hashed_res = HashExtended.new.merge({'recording_buffer': response.to_s, 'filename': "#{call_uuid}.mp3"})
+            return hashed_res.to_dot
+          end
+
+          # this method will raise exception if there's error
+          processed_response = Moceansdk::Modules::ResponseFactory.create_object(response.to_s)
+          processed_response.raw_response = response.to_s
+          raise Moceansdk::Exceptions::MoceanError.new(processed_response['err_msg'], processed_response)
+        end
       end
 
     end

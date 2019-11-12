@@ -49,7 +49,7 @@ module Moceansdk
           fake.expect :call, 'testing only', [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/verify/req'
             fake.call(method, uri, params)
@@ -73,7 +73,7 @@ module Moceansdk
           fake.expect :call, 'testing only', [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/verify/req/sms'
             fake.call(method, uri, params)
@@ -96,7 +96,7 @@ module Moceansdk
           fake.expect :call, 'testing only', [String, String, Hash]
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/verify/resend/sms'
             fake.call(method, uri, params)
@@ -116,7 +116,7 @@ module Moceansdk
           transmitter_mock = Moceansdk::Modules::Transmitter.new
 
           fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/verify/req'
             fake.call(method, uri, params)
@@ -139,7 +139,7 @@ module Moceansdk
           transmitter_mock = Moceansdk::Modules::Transmitter.new
 
           fake.expect :call, transmitter_mock.format_response(file_content, true, '/verify/req'), [String, String, Hash]
-          transmitter_mock.stub(:request, lambda {|method, uri, params|
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
             assert_equal method, 'post'
             assert_equal uri, '/verify/req'
             fake.call(method, uri, params)
