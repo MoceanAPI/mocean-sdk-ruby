@@ -4,12 +4,8 @@ module Moceansdk
     module Account
 
       class PricingTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          pricing = @client.pricing
+          pricing = MoceanTest::TestingUtils.client_obj.pricing
 
           pricing.mcc = 'test mcc'
           refute pricing.params['mocean-mcc'].nil?
@@ -42,8 +38,8 @@ module Moceansdk
             assert_equal client.pricing.inquiry, 'testing only'
           end
 
-          assert fake.verify
-        end
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.pricing.inquiry
 
         def test_json_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('price.json'))
@@ -84,7 +80,11 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj(Transmitter.new(version: '1'))
+          res = client.pricing.inquiry('mocean-resp-format': 'xml')
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('price.xml')
+          object_test(res)
 
 
           # v2 test
@@ -105,7 +105,11 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.pricing.inquiry('mocean-resp-format': 'xml')
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('price_v2.xml')
+          object_test(res)
         end
 
         private

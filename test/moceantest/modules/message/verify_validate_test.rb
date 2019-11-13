@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class VerifyValidateTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          verify_validate = @client.verify_validate
+          verify_validate = MoceanTest::TestingUtils.client_obj.verify_validate
 
           verify_validate.reqid = 'test reqid'
           refute verify_validate.params['mocean-reqid'].nil?
@@ -45,8 +41,10 @@ module Moceansdk
             ), 'testing only')
           end
 
-          assert fake.verify
-        end
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.verify_validate.send(
+              'mocean-reqid': 'test reqid', 'mocean-code': 'test code'
+          )
 
         def test_json_response
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('verify_code.json'))
@@ -64,17 +62,23 @@ module Moceansdk
                 'mocean-reqid': 'test reqid', 'mocean-code': 'test code'
             )
 
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_send
+          MoceanTest::TestingUtils.intercept_http_request(
+              'verify_code.xml',
+              '/verify/check'
+          ) do |method, uri|
+            assert_equal method, :post
+            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/verify/check')
           end
 
-          assert fake.verify
-        end
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.verify_validate.send(
+              'mocean-reqid': 'test reqid', 'mocean-code': 'test code', 'mocean-resp-format': 'xml'
+          )
 
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('verify_code.xml'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('verify_code.xml')
+          object_test(res)
+        end
 
           fake.expect :call, transmitter_mock.format_response(file_content, true, '/verify/check'), [String, String, Hash]
           transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
@@ -87,11 +91,10 @@ module Moceansdk
                 'mocean-reqid': 'test reqid', 'mocean-code': 'test code'
             )
 
-            assert_equal res.to_s, file_content
-            object_test(res)
+          client = MoceanTest::TestingUtils.client_obj
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            client.verify_validate.send
           end
-
-          assert fake.verify
         end
 
         private

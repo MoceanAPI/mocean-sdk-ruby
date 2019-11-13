@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class VerifyRequestTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          verify_request = @client.verify_request
+          verify_request = MoceanTest::TestingUtils.client_obj.verify_request
 
           verify_request.to = 'test to'
           refute verify_request.params['mocean-to'].nil?
@@ -65,7 +61,17 @@ module Moceansdk
             ), 'testing only')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          verify_request = client.verify_request
+          assert_equal verify_request.channel, Channel::AUTO
+          verify_request.send_as Channel::SMS
+          assert_equal verify_request.channel, Channel::SMS
+          res = verify_request.send(
+              'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.json')
+          object_test(res)
         end
 
         def test_send_as_sms_channel
@@ -88,7 +94,15 @@ module Moceansdk
             ), 'testing only')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.verify_request.resend(
+              'mocean-reqid': 'test reqid'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('resend_code.json')
+          object_test(res)
+          assert_equal res.to, '60123456789'
+          assert_equal res.resend_number, '1'
         end
 
         def test_resend
@@ -107,7 +121,13 @@ module Moceansdk
             ), 'testing only')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.verify_request.send(
+              'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.json')
+          object_test(res)
         end
 
         def test_json_response
@@ -130,7 +150,13 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.verify_request.send(
+              'mocean-to': 'test to', 'mocean-brand': 'test-brand', 'mocean-resp-format': 'xml'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.xml')
+          object_test(res)
         end
 
         def test_xml_response
@@ -153,7 +179,10 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            client.verify_request.send
+          end
         end
 
         private

@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class SmsTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          sms = @client.sms
+          sms = MoceanTest::TestingUtils.client_obj.sms
 
           sms.from = 'test from'
           refute sms.params['mocean-from'].nil?
@@ -106,7 +102,13 @@ module Moceansdk
             ), 'testing only')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.flash_sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.json')
+          object_test(res)
         end
 
         def test_json_response
@@ -129,7 +131,13 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.json')
+          object_test(res)
         end
 
         def test_xml_response
@@ -152,8 +160,13 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj(Moceansdk::Modules::Transmitter.new({version: '1'}))
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text', 'mocean-resp-format': 'xml'
+          )
 
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message.xml')
+          object_test(res)
 
           # v2 test
           file_content = File.read(MoceanTest::TestingUtils.resource_file_path('message_v2.xml'))
@@ -175,7 +188,25 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.sms.send(
+              'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text', 'mocean-resp-format': 'xml'
+          )
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('message_v2.xml')
+          object_test(res)
+        end
+
+        def test_required_field_not_set
+          MoceanTest::TestingUtils.intercept_http_request(
+              'message.json',
+              '/sms'
+          )
+
+          client = MoceanTest::TestingUtils.client_obj
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            client.sms.send
+          end
         end
 
         private

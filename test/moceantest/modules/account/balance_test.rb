@@ -4,12 +4,8 @@ module Moceansdk
     module Account
 
       class BalanceTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          balance = @client.balance
+          balance = MoceanTest::TestingUtils.client_obj.balance
           balance.resp_format = 'json'
           refute balance.params['mocean-resp-format'].nil?
           assert_equal 'json', balance.params['mocean-resp-format']
@@ -46,11 +42,8 @@ module Moceansdk
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
             res = client.balance.inquiry
 
-            assert_equal res.to_s, file_content
-            object_test(res)
-          end
-
-          assert fake.verify
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('balance.json')
+          object_test(res)
         end
 
         def test_xml_response
@@ -71,7 +64,11 @@ module Moceansdk
             object_test(res)
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.balance.inquiry
+
+          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('balance.xml')
+          object_test(res)
         end
 
         private
