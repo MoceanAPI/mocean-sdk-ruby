@@ -49,13 +49,13 @@ module Moceansdk
         end
 
         def hangup(call_uuid)
-          @required_fields = ['mocean-api-key', 'mocean-api-secret']
+          @required_fields = ['mocean-api-key', 'mocean-api-secret', 'mocean-call-uuid']
 
-          create({})
+          create({:'mocean-call-uuid' => call_uuid})
           create_final_params
           required_field_set?
 
-          @transmitter.post("/voice/hangup/#{call_uuid}", @params)
+          @transmitter.post("/voice/hangup", @params)
         end
 
         def recording(call_uuid)

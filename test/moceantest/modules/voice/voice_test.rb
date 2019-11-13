@@ -117,8 +117,9 @@ module Moceansdk
 
           fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
           transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal params[:'mocean-call-uuid'], 'xxx-xxx-xxx-xxx'
             assert_equal method, 'post'
-            assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
+            assert_equal uri, '/voice/hangup'
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
@@ -138,8 +139,9 @@ module Moceansdk
 
           transmitter_mock = Moceansdk::Modules::Transmitter.new
           transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal params[:'mocean-call-uuid'], 'xxx-xxx-xxx-xxx'
             assert_equal method, 'post'
-            assert_equal uri, '/voice/hangup/xxx-xxx-xxx-xxx'
+            assert_equal uri, '/voice/hangup'
             fake.call(method, uri, params)
           }) do
             client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
