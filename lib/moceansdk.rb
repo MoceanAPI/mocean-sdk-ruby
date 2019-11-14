@@ -23,6 +23,17 @@ require 'moceansdk/modules/message/verify_validate'
 
 require 'moceansdk/modules/number_lookup/number_lookup'
 
+require 'moceansdk/modules/voice/mc_object/abstract_mc'
+require 'moceansdk/modules/voice/mc_object/dial'
+require 'moceansdk/modules/voice/mc_object/collect'
+require 'moceansdk/modules/voice/mc_object/play'
+require 'moceansdk/modules/voice/mc_object/record'
+require 'moceansdk/modules/voice/mc_object/say'
+require 'moceansdk/modules/voice/mc_object/sleep'
+require 'moceansdk/modules/voice/mc'
+require 'moceansdk/modules/voice/mc_builder'
+require 'moceansdk/modules/voice/voice'
+
 require 'moceansdk/utils'
 require 'moceansdk/version'
 require 'moceansdk/client'

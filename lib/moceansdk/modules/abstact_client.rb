@@ -22,7 +22,7 @@ module Moceansdk
         end
 
         # convert string hash to symbol hash
-        @params = final_params.inject({}) {|memo, (k, v)| memo[k.to_sym] = v; memo}
+        @params = Moceansdk::Utils.convert_to_symbol_hash(final_params)
       end
 
       def param_prefix_set?(key)

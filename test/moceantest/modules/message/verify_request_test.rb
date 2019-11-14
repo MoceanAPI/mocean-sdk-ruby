@@ -4,8 +4,12 @@ module Moceansdk
     module Message
 
       class VerifyRequestTest < MoceanTest::Test
+        def setup
+          @client = MoceanTest::TestingUtils.client_obj
+        end
+
         def test_setter
-          verify_request = MoceanTest::TestingUtils.client_obj.verify_request
+          verify_request = @client.verify_request
 
           verify_request.to = 'test to'
           refute verify_request.params['mocean-to'].nil?
@@ -40,94 +44,116 @@ module Moceansdk
           assert_equal 'json', verify_request.params['mocean-resp-format']
         end
 
-        def test_send_as_sms_channel
-          MoceanTest::TestingUtils.intercept_http_request(
-              'send_code.json',
-              '/verify/req/sms'
-          ) do |method, uri|
-            assert_equal method, :post
-            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/verify/req/sms')
+        def test_send
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/req'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+
+            assert_raises Moceansdk::Exceptions::RequiredFieldException do
+              client.verify_request.send
+            end
+
+            assert_equal(client.verify_request.send(
+                'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+            ), 'testing only')
           end
 
-          client = MoceanTest::TestingUtils.client_obj
-          verify_request = client.verify_request
-          assert_equal verify_request.channel, Channel::AUTO
-          verify_request.send_as Channel::SMS
-          assert_equal verify_request.channel, Channel::SMS
-          res = verify_request.send(
-              'mocean-to': 'test to', 'mocean-brand': 'test-brand'
-          )
+          assert fake.verify
+        end
 
-          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.json')
-          object_test(res)
+        def test_send_as_sms_channel
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/req/sms'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            verify_request = client.verify_request
+            assert_equal verify_request.channel, Channel::AUTO
+            verify_request.send_as Channel::SMS
+            assert_equal verify_request.channel, Channel::SMS
+            assert_equal(verify_request.send(
+                'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+            ), 'testing only')
+          end
+
+          assert fake.verify
         end
 
         def test_resend
-          MoceanTest::TestingUtils.intercept_http_request(
-              'resend_code.json',
-              '/verify/resend/sms'
-          ) do |method, uri|
-            assert_equal method, :post
-            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/verify/resend/sms')
+          fake = Minitest::Mock.new
+          fake.expect :call, 'testing only', [String, String, Hash]
+
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/resend/sms'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            assert_equal(client.verify_request.resend(
+                'mocean-reqid': 'test reqid'
+            ), 'testing only')
           end
 
-          client = MoceanTest::TestingUtils.client_obj
-          res = client.verify_request.resend(
-              'mocean-reqid': 'test reqid'
-          )
-
-          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('resend_code.json')
-          object_test(res)
-          assert_equal res.to, '60123456789'
-          assert_equal res.resend_number, '1'
+          assert fake.verify
         end
 
-        def test_json_send
-          MoceanTest::TestingUtils.intercept_http_request(
-              'send_code.json',
-              '/verify/req'
-          ) do |method, uri|
-            assert_equal method, :post
-            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/verify/req')
+        def test_json_response
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('send_code.json'))
+          fake = Minitest::Mock.new
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/req'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            res = client.verify_request.send(
+                'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+            )
+
+            assert_equal res.to_s, file_content
+            object_test(res)
           end
 
-          client = MoceanTest::TestingUtils.client_obj
-          res = client.verify_request.send(
-              'mocean-to': 'test to', 'mocean-brand': 'test-brand'
-          )
-
-          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.json')
-          object_test(res)
+          assert fake.verify
         end
 
-        def test_xml_send
-          MoceanTest::TestingUtils.intercept_http_request(
-              'send_code.xml',
-              '/verify/req'
-          ) do |method, uri|
-            assert_equal method, :post
-            assert_equal uri.path, MoceanTest::TestingUtils.test_uri('/verify/req')
+        def test_xml_response
+          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('send_code.xml'))
+          fake = Minitest::Mock.new
+          transmitter_mock = Moceansdk::Modules::Transmitter.new
+
+          fake.expect :call, transmitter_mock.format_response(file_content, true, '/verify/req'), [String, String, Hash]
+          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
+            assert_equal method, 'post'
+            assert_equal uri, '/verify/req'
+            fake.call(method, uri, params)
+          }) do
+            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
+            res = client.verify_request.send(
+                'mocean-to': 'test to', 'mocean-brand': 'test-brand'
+            )
+
+            assert_equal res.to_s, file_content
+            object_test(res)
           end
 
-          client = MoceanTest::TestingUtils.client_obj
-          res = client.verify_request.send(
-              'mocean-to': 'test to', 'mocean-brand': 'test-brand', 'mocean-resp-format': 'xml'
-          )
-
-          assert_equal res.to_s, MoceanTest::TestingUtils.response_str('send_code.xml')
-          object_test(res)
-        end
-
-        def test_required_field_not_set
-          MoceanTest::TestingUtils.intercept_http_request(
-              'send_code.json',
-              '/verify/req'
-          )
-
-          client = MoceanTest::TestingUtils.client_obj
-          assert_raises Moceansdk::Exceptions::RequiredFieldException do
-            client.verify_request.send
-          end
+          assert fake.verify
         end
 
         private
