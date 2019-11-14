@@ -42,112 +42,62 @@ module Moceansdk
           assert_equal JSON.generate(McBuilder.new.add(mc_params).build), voice.params['mocean-command']
         end
 
-        def test_call
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/voice/dial'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-
-            assert_raises Moceansdk::Exceptions::RequiredFieldException do
-              client.voice.call
-            end
-
-            assert_equal client.voice.call('mocean-to': 'test to', 'mocean-command': 'test mocean command'), 'testing only'
+        def test_json_call
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-command': 'test mocean command'})
+            file_response('voice.json')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.voice.call('mocean-to': 'test to', 'mocean-command': 'test mocean command')
+          object_test(res)
         end
 
-        def test_json_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('voice.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/voice/dial'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.call('mocean-to': 'test to')
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_call
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-command': 'test mocean command'})
+            file_response('voice.xml')
           end
 
-          assert fake.verify
-        end
-
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('voice.xml'))
-          fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/voice/dial'), [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/voice/dial'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.call('mocean-to': 'test to')
-
-            assert_equal res.to_s, file_content
-            object_test(res)
-          end
-
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.voice.call('mocean-to': 'test to', 'mocean-command': 'test mocean command', 'mocean-resp-format': 'xml')
+          object_test(res)
         end
 
         def test_json_hangup
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('hangup.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal params[:'mocean-call-uuid'], 'xxx-xxx-xxx-xxx'
-            assert_equal method, 'post'
-            assert_equal uri, '/voice/hangup'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.hangup('xxx-xxx-xxx-xxx')
-
-            assert_equal res.to_s, file_content
-            assert_equal res.status, '0'
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/hangup') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
+            file_response('hangup.json')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.voice.hangup('xxx-xxx-xxx-xxx')
+          assert_equal res.status, '0'
         end
 
         def test_xml_hangup
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('hangup.xml'))
-          fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/voice/hangup/xxx-xxx-xxx-xxx'), [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal params[:'mocean-call-uuid'], 'xxx-xxx-xxx-xxx'
-            assert_equal method, 'post'
-            assert_equal uri, '/voice/hangup'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.hangup('xxx-xxx-xxx-xxx')
-
-            assert_equal res.to_s, file_content
-            assert_equal res.status, '0'
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/hangup') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
+            file_response('hangup.xml')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.voice.hangup('xxx-xxx-xxx-xxx')
+          assert_equal res.status, '0'
+        end
+
+        def test_required_param_missing
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+            file_response('voice.json')
+          end
+
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            MoceanTest::TestingUtils.client_obj.voice.call
+          end
         end
 
         private

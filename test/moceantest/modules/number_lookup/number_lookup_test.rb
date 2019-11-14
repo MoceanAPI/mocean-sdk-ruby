@@ -20,68 +20,38 @@ module Moceansdk
           assert_equal 'json', number_lookup.params['mocean-resp-format']
         end
 
-        def test_inquiry
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/nl'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-
-            assert_raises Moceansdk::Exceptions::RequiredFieldException do
-              client.number_lookup.inquiry
-            end
-
-            assert_equal client.number_lookup.inquiry('mocean-to': 'test to'), 'testing only'
+        def test_json_inquiry
+          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-to': 'test to'})
+            file_response('number_lookup.json')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.number_lookup.inquiry('mocean-to': 'test to')
+          object_test(res)
         end
 
-        def test_json_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('number_lookup.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          fake.expect :call, transmitter_mock.format_response(file_content), [String, String, Hash]
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/nl'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry('mocean-to': 'test to')
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_xml_inquiry
+          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-to': 'test to'})
+            file_response('number_lookup.xml')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.number_lookup.inquiry('mocean-to': 'test to', 'mocean-resp-format': 'xml')
+          object_test(res)
         end
 
-        def test_xml_response
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('number_lookup.xml'))
-          fake = Minitest::Mock.new
-          fake.expect :call, Moceansdk::Modules::Transmitter.new.format_response(file_content, true, '/nl'), [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'post'
-            assert_equal uri, '/nl'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.number_lookup.inquiry('mocean-to': 'test to')
-
-            assert_equal res.to_s, file_content
-            object_test(res)
+        def test_required_param_missing
+          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+            file_response('number_lookup.json')
           end
 
-          assert fake.verify
+          assert_raises Moceansdk::Exceptions::RequiredFieldException do
+            MoceanTest::TestingUtils.client_obj.number_lookup.inquiry
+          end
         end
 
         private

@@ -4,58 +4,31 @@ module Moceansdk
     module Voice
 
       class RecordingTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_json_recording
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('recording.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          mock_recording_response = MockRecordingResponse.new
-          mock_recording_response['Content-Type'] = 'audio/mpeg'
-          mock_recording_response['content'] = file_content
-
-          fake.expect :call, mock_recording_response, [String, String, Hash]
-          transmitter_mock.stub(:request, lambda { |method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/voice/rec'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            res = client.voice.recording('xxx-xxx-xxx-xxx')
-
-            refute res.recording_buffer.nil?
-            assert_equal res.filename, 'xxx-xxx-xxx-xxx.mp3'
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/rec') do |request|
+            assert_equal request.method, :get
+            verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
+            response = file_response('recording.json')
+            response['headers'] = {'Content-Type': 'audio/mpeg'}
+            response
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          res = client.voice.recording('xxx-xxx-xxx-xxx')
+          refute res.recording_buffer.nil?
+          assert_equal res.filename, 'xxx-xxx-xxx-xxx.mp3'
         end
 
         def test_error_recording
-          file_content = File.read(MoceanTest::TestingUtils.resource_file_path('error_response.json'))
-          fake = Minitest::Mock.new
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-
-          mock_recording_response = MockRecordingResponse.new
-          mock_recording_response['is_error'] = true
-          mock_recording_response['content'] = file_content
-
-          fake.expect :call, mock_recording_response, [String, String, Hash]
-          transmitter_mock.stub(:request, lambda { |method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/voice/rec'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-
-            assert_raises Moceansdk::Exceptions::MoceanError do
-              client.voice.recording('xxx-xxx-xxx-xxx')
-            end
+          MoceanTest::TestingUtils.new_mock_http_request('/voice/rec') do |request|
+            file_response('error_response.json')
           end
 
-          assert fake.verify
+          client = MoceanTest::TestingUtils.client_obj
+          
+          assert_raises Moceansdk::Exceptions::MoceanError do
+            client.voice.recording('xxx-xxx-xxx-xxx')
+          end
         end
       end
 

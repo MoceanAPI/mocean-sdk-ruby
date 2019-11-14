@@ -13,8 +13,19 @@ require 'minitest/autorun'
 require 'webmock/minitest'
 require 'cgi'
 
+WebMock.disable_net_connect!
+
 module MoceanTest
   class Test < Minitest::Test
+    def verify_params_with(body, expected_body)
+      expected_body.each do |key, value|
+        assert_equal ["#{value}"], body["#{key}"]
+      end
+    end
+
+    def file_response(file_name, status_code = 200)
+      {body: File.new(File.dirname(__FILE__) + '/resources/' + file_name), status: status_code}
+    end
   end
 
   class TestingUtils
@@ -49,6 +60,21 @@ module MoceanTest
         # clear callbacks for new defined
         WebMock.reset_callbacks
         WebMock.reset!
+      end
+    end
+
+    def self.new_mock_http_request(uri, version = '2')
+      WebMock.stub_request(:any, "#{Moceansdk::Modules::Transmitter.new.default_options[:base_url]}/rest/#{version}#{uri}")
+          .with(query: WebMock.hash_including({}))
+          .to_return do |request|
+        body = if request.method == :get
+                 CGI.parse(request.uri.query)
+               else
+                 CGI.parse(request.body)
+               end
+
+        request.body = body
+        yield request
       end
     end
 
