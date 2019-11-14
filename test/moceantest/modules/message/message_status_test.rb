@@ -17,7 +17,7 @@ module Moceansdk
         end
 
         def test_json_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/report/message') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/report/message') do |request|
             assert_equal request.method, :get
             verify_params_with(request.body, {'mocean-msgid': 'test msgid'})
             file_response('message_status.json')
@@ -29,7 +29,7 @@ module Moceansdk
         end
 
         def test_xml_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/report/message') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/report/message') do |request|
             assert_equal request.method, :get
             verify_params_with(request.body, {'mocean-msgid': 'test msgid'})
             file_response('message_status.xml')
@@ -41,7 +41,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/report/message') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/report/message') do
             file_response('message_status.json')
           end
 

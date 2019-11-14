@@ -21,7 +21,7 @@ module Moceansdk
         end
 
         def test_json_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/nl') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to'})
             file_response('number_lookup.json')
@@ -33,7 +33,7 @@ module Moceansdk
         end
 
         def test_xml_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/nl') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to'})
             file_response('number_lookup.xml')
@@ -45,7 +45,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/nl') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/nl') do
             file_response('number_lookup.json')
           end
 

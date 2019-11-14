@@ -41,7 +41,7 @@ module Moceansdk
         end
 
         def test_json_send
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/req') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/req') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-brand': 'test-brand'})
             file_response('send_code.json')
@@ -53,7 +53,7 @@ module Moceansdk
         end
 
         def test_xml_send
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/req') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/req') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-brand': 'test-brand'})
             file_response('send_code.xml')
@@ -65,7 +65,7 @@ module Moceansdk
         end
 
         def test_send_as_sms_channel
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/req/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/req/sms') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-brand': 'test-brand'})
             file_response('send_code.json')
@@ -80,7 +80,7 @@ module Moceansdk
         end
 
         def test_resend
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/resend/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/resend/sms') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-reqid': 'test reqid'})
             file_response('resend_code.json')
@@ -91,7 +91,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/req') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/req') do
             file_response('send_code.json')
           end
 

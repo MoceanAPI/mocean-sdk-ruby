@@ -5,7 +5,7 @@ module Moceansdk
 
       class RecordingTest < MoceanTest::Test
         def test_json_recording
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/rec') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/rec') do |request|
             assert_equal request.method, :get
             verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
             response = file_response('recording.json')
@@ -20,29 +20,14 @@ module Moceansdk
         end
 
         def test_error_recording
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/rec') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/rec') do
             file_response('error_response.json')
           end
 
           client = MoceanTest::TestingUtils.client_obj
-          
+
           assert_raises Moceansdk::Exceptions::MoceanError do
             client.voice.recording('xxx-xxx-xxx-xxx')
-          end
-        end
-      end
-
-      class MockRecordingResponse < Hash
-        def initialize(*several_variants)
-          super(*several_variants)
-          self['is_error'] = false
-        end
-
-        def to_s
-          if self['is_error']
-            self['content']
-          else
-            {'recording_buffer': self['content'], 'filename': "xxx-xxx-xxx-xxx.mp3"}
           end
         end
       end

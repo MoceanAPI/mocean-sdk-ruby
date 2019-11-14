@@ -25,7 +25,7 @@ module Moceansdk
         end
 
         def test_json_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/account/pricing') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/account/pricing') do |request|
             assert_equal request.method, :get
             file_response('price.json')
           end
@@ -36,7 +36,7 @@ module Moceansdk
         end
 
         def test_xml_response
-          MoceanTest::TestingUtils.new_mock_http_request('/account/pricing', '1') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/account/pricing', '1') do |request|
             assert_equal request.method, :get
             file_response('price.xml')
           end
@@ -46,7 +46,7 @@ module Moceansdk
           object_test(res)
 
           # v2 test
-          MoceanTest::TestingUtils.new_mock_http_request('/account/pricing') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/account/pricing') do |request|
             assert_equal request.method, :get
             file_response('price_v2.xml')
           end

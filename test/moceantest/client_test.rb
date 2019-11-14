@@ -36,6 +36,15 @@ module Moceansdk
         Client.new(DummyCredential.new)
       end
     end
+
+    def test_create_client_with_ssl_disabled
+      WebMock.stub_request(:any, 'http://test.com/rest/2/account/balance')
+          .with(query: WebMock.hash_including({}))
+          .to_return(body: '{"testing": "testing"}')
+
+      @client = Client.new(Auth::Basic.new('test api key', 'test api secret'), base_url: 'http://test.com', verify_ssl: false)
+      assert_equal @client.balance.inquiry, {"testing" => "testing"}
+    end
   end
 
   class DummyCredential < Auth::AbstractAuth

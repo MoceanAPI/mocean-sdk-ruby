@@ -43,7 +43,7 @@ module Moceansdk
         end
 
         def test_json_call
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/dial') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-command': 'test mocean command'})
             file_response('voice.json')
@@ -55,7 +55,7 @@ module Moceansdk
         end
 
         def test_xml_call
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/dial') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-command': 'test mocean command'})
             file_response('voice.xml')
@@ -67,7 +67,7 @@ module Moceansdk
         end
 
         def test_json_hangup
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/hangup') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/hangup') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
             file_response('hangup.json')
@@ -79,7 +79,7 @@ module Moceansdk
         end
 
         def test_xml_hangup
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/hangup') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/hangup') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-call-uuid': 'xxx-xxx-xxx-xxx'})
             file_response('hangup.xml')
@@ -91,7 +91,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/voice/dial') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/voice/dial') do
             file_response('voice.json')
           end
 

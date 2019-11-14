@@ -11,25 +11,8 @@ module Moceansdk
           assert_equal 'json', balance.params['mocean-resp-format']
         end
 
-        def test_inquiry
-          fake = Minitest::Mock.new
-          fake.expect :call, 'testing only', [String, String, Hash]
-
-          transmitter_mock = Moceansdk::Modules::Transmitter.new
-          transmitter_mock.stub(:request_and_parse_body, lambda {|method, uri, params|
-            assert_equal method, 'get'
-            assert_equal uri, '/account/balance'
-            fake.call(method, uri, params)
-          }) do
-            client = MoceanTest::TestingUtils.client_obj(transmitter_mock)
-            assert_equal client.balance.inquiry, 'testing only'
-          end
-
-          assert fake.verify
-        end
-
         def test_json_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/account/balance') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/account/balance') do |request|
             assert_equal request.method, :get
             file_response('balance.json')
           end
@@ -40,7 +23,7 @@ module Moceansdk
         end
 
         def test_xml_inquiry
-          MoceanTest::TestingUtils.new_mock_http_request('/account/balance') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/account/balance') do |request|
             assert_equal request.method, :get
             file_response('balance.xml')
           end

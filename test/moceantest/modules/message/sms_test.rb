@@ -61,7 +61,7 @@ module Moceansdk
         end
 
         def test_send_flash_sms
-          MoceanTest::TestingUtils.new_mock_http_request('/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/sms') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text', 'mocean-mclass': '1', 'mocean-alt-dcs': '1'})
             file_response('message.json')
@@ -72,7 +72,7 @@ module Moceansdk
         end
 
         def test_xml_send
-          MoceanTest::TestingUtils.new_mock_http_request('/sms', '1') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/sms', '1') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'})
             file_response('message.xml')
@@ -83,7 +83,7 @@ module Moceansdk
           object_test(res)
 
           # v2 test
-          MoceanTest::TestingUtils.new_mock_http_request('/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/sms') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'})
             file_response('message_v2.xml')
@@ -95,7 +95,7 @@ module Moceansdk
         end
 
         def test_json_send
-          MoceanTest::TestingUtils.new_mock_http_request('/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/sms') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-from': 'test from', 'mocean-to': 'test to', 'mocean-text': 'test text'})
             file_response('message.json')
@@ -107,7 +107,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/sms') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/sms') do
             file_response('message.json')
           end
 

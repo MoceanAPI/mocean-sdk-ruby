@@ -21,7 +21,7 @@ module Moceansdk
         end
 
         def test_json_send
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/check') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/check') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-reqid': 'test reqid', 'mocean-code': 'test code'})
             file_response('verify_code.json')
@@ -33,7 +33,7 @@ module Moceansdk
         end
 
         def test_xml_send
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/check') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/check') do |request|
             assert_equal request.method, :post
             verify_params_with(request.body, {'mocean-reqid': 'test reqid', 'mocean-code': 'test code'})
             file_response('verify_code.xml')
@@ -45,7 +45,7 @@ module Moceansdk
         end
 
         def test_required_param_missing
-          MoceanTest::TestingUtils.new_mock_http_request('/verify/check') do |request|
+          MoceanTest::TestingUtils.mock_http_request('/verify/check') do
             file_response('verify_code.json')
           end
 
