@@ -4,12 +4,8 @@ module Moceansdk
     module NumberLookup
 
       class NumberLookupTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          number_lookup = @client.number_lookup
+          number_lookup = MoceanTest::TestingUtils.client_obj.number_lookup
 
           number_lookup.to = 'test to'
           refute number_lookup.params['mocean-to'].nil?

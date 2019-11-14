@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class VerifyRequestTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          verify_request = @client.verify_request
+          verify_request = MoceanTest::TestingUtils.client_obj.verify_request
 
           verify_request.to = 'test to'
           refute verify_request.params['mocean-to'].nil?

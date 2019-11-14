@@ -4,12 +4,8 @@ module Moceansdk
     module Account
 
       class BalanceTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          balance = @client.balance
+          balance = MoceanTest::TestingUtils.client_obj.balance
           balance.resp_format = 'json'
           refute balance.params['mocean-resp-format'].nil?
           assert_equal 'json', balance.params['mocean-resp-format']

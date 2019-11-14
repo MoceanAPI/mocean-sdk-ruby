@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class MessageStatusTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          message_status = @client.message_status
+          message_status = MoceanTest::TestingUtils.client_obj.message_status
 
           message_status.msgid = 'test msgid'
           refute message_status.params['mocean-msgid'].nil?

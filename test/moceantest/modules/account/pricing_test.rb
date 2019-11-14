@@ -4,12 +4,8 @@ module Moceansdk
     module Account
 
       class PricingTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          pricing = @client.pricing
+          pricing = MoceanTest::TestingUtils.client_obj.pricing
 
           pricing.mcc = 'test mcc'
           refute pricing.params['mocean-mcc'].nil?

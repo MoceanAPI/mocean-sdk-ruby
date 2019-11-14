@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class SmsTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          sms = @client.sms
+          sms = MoceanTest::TestingUtils.client_obj.sms
 
           sms.from = 'test from'
           refute sms.params['mocean-from'].nil?

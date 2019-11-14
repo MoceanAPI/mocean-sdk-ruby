@@ -4,12 +4,8 @@ module Moceansdk
     module Message
 
       class VerifyValidateTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          verify_validate = @client.verify_validate
+          verify_validate = MoceanTest::TestingUtils.client_obj.verify_validate
 
           verify_validate.reqid = 'test reqid'
           refute verify_validate.params['mocean-reqid'].nil?

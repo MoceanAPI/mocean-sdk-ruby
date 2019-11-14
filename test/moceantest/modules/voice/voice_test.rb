@@ -4,12 +4,8 @@ module Moceansdk
     module Voice
 
       class VoiceTest < MoceanTest::Test
-        def setup
-          @client = MoceanTest::TestingUtils.client_obj
-        end
-
         def test_setter
-          voice = @client.voice
+          voice = MoceanTest::TestingUtils.client_obj.voice
 
           voice.to = 'test to'
           refute voice.params['mocean-to'].nil?
@@ -28,18 +24,18 @@ module Moceansdk
           assert_equal 'json', voice.params['mocean-resp-format']
 
           # test multiple mocean commands
-          voice = @client.voice
+          voice = MoceanTest::TestingUtils.client_obj.voice
           voice.mocean_command = [{'action': 'say'}]
           refute voice.params['mocean-command'].nil?
           assert_equal JSON.generate([{'action': 'say'}]), voice.params['mocean-command']
 
-          voice = @client.voice
+          voice = MoceanTest::TestingUtils.client_obj.voice
           builder_params = McBuilder.new.add(Mc.say 'hello world')
           voice.mocean_command = builder_params
           refute voice.params['mocean-command'].nil?
           assert_equal JSON.generate(builder_params.build), voice.params['mocean-command']
 
-          voice = @client.voice
+          voice = MoceanTest::TestingUtils.client_obj.voice
           mc_params = Mc.say('hello world')
           voice.mocean_command = mc_params
           refute voice.params['mocean-command'].nil?

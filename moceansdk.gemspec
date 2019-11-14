@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('codecov', '>= 0.1.10')
   s.add_development_dependency('minitest', '~> 5.0')
   s.add_development_dependency('rake', '~> 12.0')
+  s.add_development_dependency('webmock', '~> 3.6')
   s.require_path = 'lib'
   s.metadata = {
       'homepage' => 'https://github.com/MoceanAPI/mocean-sdk-ruby',
