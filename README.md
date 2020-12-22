@@ -68,7 +68,7 @@ Kindly visit [MoceanApi Docs][doc_main] for more usage
 
 This library is released under the [MIT License][license]
 
-[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=sdk-ruby
+[signup]: https://dashboard.moceanapi.com/register?medium=github&campaign=ruby-sdk
 [doc_main]: https://moceanapi.com/docs/?ruby
 [doc_sms]: https://moceanapi.com/docs/?ruby#send-sms
 [license]: LICENSE.txt
