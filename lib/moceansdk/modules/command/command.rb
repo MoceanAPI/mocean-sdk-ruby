@@ -14,33 +14,34 @@ module Moceansdk
 
         def mocean_command=(param)
           if param.is_a? McBuilder
-            @params['mocean-command'] = param.build
+            @params['mocean-command'] = JSON.generate(param.build)
+          elsif param.is_a? McObject::AbstractMc
+            @params['mocean-command'] = JSON.generate([param.get_request_data])
+          elsif param.is_a? Array
+            @params['mocean-command'] = JSON.generate(param)
           else
-            raise Moceansdk::Exceptions::MoceanError.new('mocean_command must be instance of McBuilder')
+            @params['mocean-command'] = param
           end
         end
 
 
         def execute(params = {})
-          
-          if params[:'mocean-command'].nil? == false && (params[:'mocean-command'].is_a? McBuilder) == false
-            raise Moceansdk::Exceptions::MoceanError.new('mocean_command must be instance of McBuilder')
+          sym_params = Moceansdk::Utils.convert_to_symbol_hash(params)
+
+          unless sym_params[:'mocean-command'].nil?
+            mc = sym_params[:'mocean-command']
+            sym_params.delete(:'mocean-command')
+            self.mocean_command = mc
           end
 
-          create(params)
+          create(sym_params)
           create_final_params
           required_field_set?
-          
-          @params[:'mocean-command'] = JSON.generate(@params[:'mocean-command'].build)
-        
+
+          # @sym_params[:'mocean-command'] = JSON.generate(@sym_params[:'mocean-command'].build)
           @transmitter.post('/send-message', @params)
         end
-
-       
-
-        
       end
-      
     end
   end
 end
