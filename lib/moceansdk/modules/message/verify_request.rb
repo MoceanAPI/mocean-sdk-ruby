@@ -63,6 +63,8 @@ module Moceansdk
 
           if @channel == Channel::SMS
             verify_request_url += '/sms'
+          elsif @channel == Channel::TELEGRAM
+            verify_request_url += '/telegram'
           end
 
           @transmitter.post(verify_request_url, @params)

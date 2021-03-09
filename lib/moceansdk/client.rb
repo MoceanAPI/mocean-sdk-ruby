@@ -61,6 +61,10 @@ module Moceansdk
     def voice
       Modules::Voice::Voice.new(@obj_auth, @transmitter)
     end
+
+    def command
+      Modules::Command::Command.new(@obj_auth, @transmitter)
+    end
   end
 
 end
