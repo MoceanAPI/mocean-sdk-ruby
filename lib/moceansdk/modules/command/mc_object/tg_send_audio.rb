@@ -4,10 +4,10 @@ module Moceansdk
       module McObject
 
         class TgSendAudio < AbstractMc
-            def action 
+            def action
               'send-telegram'
             end
-            
+
             def required_key
               ['from','to','content']
             end
@@ -26,15 +26,15 @@ module Moceansdk
               return self
             end
 
-            def content(url,text)
+            def content(url, text)
               @params[:'content'] = {}
               @params[:'content'][:'rich_media_url'] = url
               @params[:'content'][:'text'] = text
-              @params[:'content'][:'type'] = 'Audio'
+              @params[:'content'][:'type'] = 'audio'
               return self
             end
         end
-          
+
       end
     end
   end

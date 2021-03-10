@@ -4,17 +4,12 @@ module Moceansdk
       module McObject
 
         class TgRequestContact < AbstractMc
-          def initialize(params=nil)
-            super(params)
-            button("Share contact")
-          end
-
           def action
             'send-telegram'
           end
 
           def required_key
-            ['from','to','content']
+            ['from', 'to', 'content', 'tg_keyboard']
           end
 
           def from(from, contact_type = 'bot_username')
