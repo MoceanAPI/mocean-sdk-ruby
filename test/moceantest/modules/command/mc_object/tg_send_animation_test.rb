@@ -4,7 +4,7 @@ module Moceansdk
     module Command
       module McObject
 
-        class TgSendTextTest < MoceanTest::Test
+        class TgSendAnimationTest < MoceanTest::Test
           def test_params
             params = {
                 'from': {
@@ -16,24 +16,25 @@ module Moceansdk
                   'id': 'test chat'
                 },
                 'content': {
-                  'type': 'text',
+                  'type': 'animation',
+                  'rich_media_url': 'test url',
                   'text': 'test text'
                 },
                 'action': 'send-telegram'
             }
-            assert_equal params, TgSendText.new(params).get_request_data
+            assert_equal params, TgSendAnimation.new(params).get_request_data
 
-            tg_send_text_test = TgSendText.new
-            tg_send_text_test.from 'test bot'
-            tg_send_text_test.to 'test chat'
-            tg_send_text_test.content 'test text'
+            tg_send_animation_test = TgSendAnimation.new
+            tg_send_animation_test.from 'test bot'
+            tg_send_animation_test.to 'test chat'
+            tg_send_animation_test.content 'test url', 'test text'
 
-            assert_equal params, tg_send_text_test.get_request_data
+            assert_equal params, tg_send_animation_test.get_request_data
           end
 
           def test_if_required_field_not_set
             assert_raises Moceansdk::Exceptions::RequiredFieldException do
-              TgSendText.new.get_request_data
+              TgSendAnimation.new.get_request_data
             end
           end
         end

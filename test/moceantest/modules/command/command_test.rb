@@ -28,7 +28,7 @@ module Moceansdk
           assert_equal JSON.generate(builder_params.build), command.params['mocean-command']
 
           command = MoceanTest::TestingUtils.client_obj.command
-          builder_params = McBuilder.new.add(Mc.tg_send_text.from("moceantestbot").to("813260944").content("hello world"))
+          builder_params = Mc.tg_send_text.from("moceantestbot").to("813260944").content("hello world")
           command.mocean_command = builder_params
           refute command.params['mocean-command'].nil?
           assert_equal JSON.generate(builder_params.build), command.params['mocean-command']

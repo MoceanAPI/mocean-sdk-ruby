@@ -79,6 +79,21 @@ module Moceansdk
           verify_request.send('mocean-to': 'test to', 'mocean-brand': 'test-brand')
         end
 
+        def test_send_as_telegram_channel
+          MoceanTest::TestingUtils.mock_http_request('/verify/req/telegram') do |request|
+            assert_equal request.method, :post
+            verify_params_with(request.body, {'mocean-to': 'test to', 'mocean-brand': 'test-brand'})
+            file_response('send_code.json')
+          end
+
+          client = MoceanTest::TestingUtils.client_obj
+          verify_request = client.verify_request
+          assert_equal verify_request.channel, Channel::AUTO
+          verify_request.send_as Channel::TELEGRAM
+          assert_equal verify_request.channel, Channel::TELEGRAM
+          verify_request.send('mocean-to': 'test to', 'mocean-brand': 'test-brand')
+        end
+
         def test_resend
           MoceanTest::TestingUtils.mock_http_request('/verify/resend/sms') do |request|
             assert_equal request.method, :post
