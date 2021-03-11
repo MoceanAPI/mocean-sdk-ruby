@@ -31,7 +31,7 @@ module Moceansdk
           builder_params = Mc.tg_send_text.from("moceantestbot").to("813260944").content("hello world")
           command.mocean_command = builder_params
           refute command.params['mocean-command'].nil?
-          assert_equal JSON.generate(builder_params.build), command.params['mocean-command']
+          assert_equal JSON.generate(McBuilder.new.add(builder_params).build), command.params['mocean-command']
         end
 
         def test_json_req
