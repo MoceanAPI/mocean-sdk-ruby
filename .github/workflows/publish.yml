@@ -1,0 +1,40 @@
+name: Publish Gem
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "2.7"
+          bundler-cache: true
+
+      - name: Install dependencies
+        run: |
+          gem install bundle
+          bundle install
+
+      - name: Setup publishing
+        run: |
+          git config --global user.email "support@moceanapi.com"
+          git config --global user.name "Micro Ocean Technologies Sdn Bhd"
+          mkdir -p ~/.gem/
+          touch $HOME/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}\n" >> ~/.gem/credentials
+
+      - name: Build the gem
+        run: bundle exec rake build
+
+      - name: Publish the gem onto rubygem
+        run: |
+          gem push pkg/*.gem
+
+      # Do we need this actually?
+      - name: Cleanup credentials
+        run: rm -rf ~/.gem/

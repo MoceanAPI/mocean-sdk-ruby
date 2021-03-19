@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'rake/release'
 
 task :default => :test
 

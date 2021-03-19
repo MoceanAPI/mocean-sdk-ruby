@@ -1,0 +1,33 @@
+name: Build test
+
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+    tags-ignore:
+      - "**"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        ruby: [2.3, 2.4, 2.5, 2.6, 2.7, "3.0", jruby]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Installing dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Run test
+        run: bundle exec rake
