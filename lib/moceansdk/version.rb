@@ -1,3 +1,3 @@
 module Moceansdk
-  VERSION = "1.1.1-rc"
+  VERSION = "1.1.1"
 end
